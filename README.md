@@ -91,21 +91,25 @@ curl http://localhost:1220/v1/people/1
 
 Handy for testing what happens when an empty array is returned.
 
+```
 curl http://localhost:3100/
 curl http://localhost:3100/v1
 curl http://localhost:3100/v1/empty
 curl http://localhost:3100/v1/empty/count
 curl http://localhost:3100/v1/empty/1
+```
 
 * * *
 
 ### Randomy generated non-sense words
 
+```
 curl http://localhost:3100/
 curl http://localhost:3100/v1
 curl http://localhost:3100/v1/words
 curl http://localhost:3100/v1/words/count
 curl http://localhost:3100/v1/words/1
+```
 
 #### Example
 
@@ -118,11 +122,13 @@ curl http://localhost:3100/v1/words/1
 
 #### Randomly generated values with non-sense names
 
+```
 curl http://localhost:3100/
 curl http://localhost:3100/v1
 curl http://localhost:3100/v1/values
 curl http://localhost:3100/v1/values/count
 curl http://localhost:3100/v1/values/1
+```
 
 ```
 {
@@ -134,11 +140,13 @@ curl http://localhost:3100/v1/values/1
 
 ### Random latitude and longitude
 
+```
 curl http://localhost:3100/
 curl http://localhost:3100/v1
 curl http://localhost:3100/v1/coords
 curl http://localhost:3100/v1/coords/count
 curl http://localhost:3100/v1/coords/1
+```
 
 ```
 {
