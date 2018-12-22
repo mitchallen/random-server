@@ -16,7 +16,7 @@ A simple REST API server that returns random JSON things.
 
 This will pull the image down from the repo if you didn't already.
 
-This example runs the server locally on port 1234.
+This example runs the server locally on port 1220.
 
     docker run -p 1220:3100 --name random-server mitchallen/random-server
 
