@@ -1,0 +1,41 @@
+{
+  "name": "random-server",
+  "version": "1.0.0",
+  "description": "A simple REST API server that returns random JSON things",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "mocha test/unit --recursive --timeout 20000",
+    "test:server": "mocha test/server --recursive --timeout 20000",
+    "test-coverage": "./node_modules/.bin/istanbul cover _mocha -- -R spec test/**/*",
+    "docker:build": "docker build -t mitchallen/thing-server .",
+    "docker:run": "docker run -d -p 1220:3100 --name random-server mitchallen/random-server",
+    "test:pets": "docker run -p 1221:3100 --name random-pets mitchallen/random-server",
+    "docker:start": "docker start random-server",
+    "docker:stop": "docker stop random-server",
+    "docker:rm": "docker rm random-server",
+    "//": "may have to install watch utitlity",
+    "watch:local": "watch -n 1 curl http://localhost:3100/",
+    "watch:container": "watch -n 1 curl http://localhost:1220/"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitchallen/random-server.git"
+  },
+  "author": "Mitch Allen <npm@mitchallen.com> (http://mitchallen.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@mitchallen/uptime": "0.0.8",
+    "body-parser": "^1.18.3",
+    "chance": "^1.0.18",
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "should": "^13.2.3",
+    "supertest": "^3.3.0"
+  }
+}
