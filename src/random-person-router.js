@@ -13,14 +13,16 @@ module.exports.create = (spec) => {
 
     for( var i = 0; i < count; i++ ) {
 
+        const gender = chance.gender().toLowerCase();
+
         const person = {
             type: spec.label,
-            prefix: chance.prefix(),
-            first: chance.first(),
+            prefix: chance.prefix({gender: gender }),
+            first: chance.first({gender: gender}),
             last: chance.last(),
             age: chance.age(),
             birthday: chance.birthday({string: true, american: true}),
-            gender: chance.gender(),
+            gender: gender,
             zip: chance.zip({plusfour: true}),
             ssnFour: chance.ssn({ ssnFour: true }),
             phone: chance.phone(),
