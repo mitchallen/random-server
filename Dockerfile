@@ -1,7 +1,7 @@
 # docker build -t <your username>/random-server .
 # docker run -p 1220:3100 -d <your username>/random-server
 
-FROM node:8
+FROM node:8-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -11,9 +11,8 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
 # If you are building your code for production
-# RUN npm install --only=production
+RUN npm install --only=production
 
 # Bundle app source
 COPY . .
