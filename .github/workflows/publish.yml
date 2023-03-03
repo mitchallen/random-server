@@ -1,5 +1,9 @@
 name: publish
-on: [push]
+on:
+  push:
+    tags:
+      - 'v*' # Trigger the workflow when a tag starting with "v" is pushed
+      
 jobs:
   publish-docker-image:
     runs-on: ubuntu-latest
@@ -13,5 +17,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the Docker image
         run: |
+          tag=${GITHUB_REF#refs/tags/}
+          tag=${tag:1}
+          echo "TAG: ${tag}"
           docker build . --tag ghcr.io/mitchallen/random-server:latest
           docker push ghcr.io/mitchallen/random-server:latest
+          
