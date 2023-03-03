@@ -22,10 +22,8 @@ jobs:
           image=ghcr.io/${GITHUB_REPOSITORY}
           echo "IMAGE: ${image}"
           echo "TAG: ${tag}"
-          echo "ACTOR: $GITHUB_ACTOR "
-          echo "REPO: $GITHUB_REPOSITORY "
-          docker build . --tag ghcr.io/$GITHUB_REPOSITORY:latest
-          docker push ghcr.io/mitchallen/random-server:latest
-          docker build . --tag ghcr.io/mitchallen/random-server:${tag}
-          docker push ghcr.io/mitchallen/random-server:${tag}
+          docker build . --tag ${image}:latest
+          docker push ${image}:latest
+          docker build . --tag ${image}:${tag}
+          docker push ${image}:${tag}
           
