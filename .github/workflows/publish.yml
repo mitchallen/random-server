@@ -19,7 +19,7 @@ jobs:
         run: |
           tag=${GITHUB_REF#refs/tags/}
           tag=${tag:1}
-          image=${ghcr.io/$GITHUB_REPOSITORY}
+          image=ghcr.io/${GITHUB_REPOSITORY}
           echo "IMAGE: ${image}"
           echo "TAG: ${tag}"
           echo "ACTOR: $GITHUB_ACTOR "
