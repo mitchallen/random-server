@@ -20,6 +20,8 @@ jobs:
           tag=${GITHUB_REF#refs/tags/}
           tag=${tag:1}
           echo "TAG: ${tag}"
-          docker build . --tag ghcr.io/mitchallen/random-server:latest
-          docker push ghcr.io/mitchallen/random-server:latest
+          # docker build . --tag ghcr.io/mitchallen/random-server:latest
+          # docker push ghcr.io/mitchallen/random-server:latest
+          docker build . --tag ghcr.io/mitchallen/random-server:${tag}
+          docker push ghcr.io/mitchallen/random-server:${tag}
           
