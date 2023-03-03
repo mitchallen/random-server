@@ -10,6 +10,10 @@ A simple REST API server that returns random JSON things.
 
 ### Pull the image from the repo
 
+    docker pull ghcr.io/mitchallen/random-server:latest
+
+### To pull older versions:
+
     docker pull mitchallen/random-server:latest
 
 ### Run the image locally as a container
@@ -18,7 +22,7 @@ This will pull the image down from the repo if you didn't already.
 
 This example runs the server locally on port 1220.
 
-    docker run -p 1220:3100 --name random-server mitchallen/random-server
+    docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
 
 From the doc:
 
@@ -33,7 +37,7 @@ From the doc:
 ```
 docker stop random-server
 docker rm random-server
-docker run -p 1220:3100 --name random-server mitchallen/random-server
+docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
 ```
 
 * * *
@@ -163,9 +167,9 @@ curl http://localhost:1220/v1/coords/1
 You can run multiple containers on multiple ports like this:
 
 ```
-docker run -p 8101:3100 --name random1 mitchallen/random-server
+docker run -p 8101:3100 --name random1 ghcr.io/mitchallen/random-server:latest
 
-docker run -p 8102:3100 --name random2 mitchallen/random-server
+docker run -p 8102:3100 --name random2 ghcr.io/mitchallen/random-server:latest
 ``` 
 
 Each server should have a unique set of values.
@@ -195,13 +199,17 @@ Each server should have a unique set of values.
 
     docker stop random-server
     docker rm random-server
-    docker rmi mitchallen/random-server
+    docker rmi ghcr.io/mitchallen/random-server:latest
 
 * * *
 
 ### Automated Docker Builds
 
-New builds of the image are created automatically using Docker Cloud.
+#### Note that this section needs revision
+
+New builds of the image were originally created automatically using Docker Cloud.
+
+Current builds are built and hosted via GitHub. 
 
 To trigger a new build via a github tag I do the following (using v1.0.6 as an example):
 
@@ -209,11 +217,11 @@ To trigger a new build via a github tag I do the following (using v1.0.6 as an e
 
 Tags must match this format to trigger a build: /v[0-9.]+$/ 
 
-    git checkout master
-    git tag v1.0.8
+    git checkout main
+    git tag v1.1.0
     git push origin --tags
 
-This triggers two new builds of the Docker image: __v1.0.x__ and __latest__
+This triggers two new builds of the Docker image: __v1.1.x__ and __latest__
 
 Docker Cloud:
 
