@@ -210,10 +210,10 @@ To trigger a new build via a github tag I do the following (using v1.0.6 as an e
 Tags must match this format to trigger a build: /v[0-9.]+$/ 
 
     git checkout master
-    git tag v1.0.7
+    git tag v1.0.8
     git push origin --tags
 
-This triggers two new builds of the Docker image: __v1.0.6__ and __latest__
+This triggers two new builds of the Docker image: __v1.0.x__ and __latest__
 
 Docker Cloud:
 
