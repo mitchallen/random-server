@@ -22,7 +22,15 @@ This will pull the image down from the repo if you didn't already.
 
 This example runs the server locally on port 1220.
 
-    docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
+```sh
+docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
+```
+
+If you are using something like an M1 Mac you can add the platform tag:
+
+```sh
+docker run --platform linux/amd64 -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
+```
 
 From the doc:
 
