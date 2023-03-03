@@ -211,7 +211,7 @@ New builds of the image were originally created automatically using Docker Cloud
 
 Current builds are built and hosted via GitHub. 
 
-To trigger a new build via a github tag I do the following (using v1.0.6 as an example):
+To trigger a new build via a github tag I do the following:
 
 *NOTE: using annotated tags didn't trigger a new build. Use the simpler format.*
 
