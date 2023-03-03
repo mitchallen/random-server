@@ -20,8 +20,8 @@ jobs:
           tag=${GITHUB_REF#refs/tags/}
           tag=${tag:1}
           echo "TAG: ${tag}"
-          echo "ACTOR: ${ GITHUB_REPOSITORY }"
-          echo "REPO: ${ GITHUB_REPOSITORY }"
+          echo "ACTOR: $GITHUB_ACTOR "
+          echo "REPO: $GITHUB_REPOSITORY "
           docker build . --tag ghcr.io/mitchallen/random-server:latest
           docker push ghcr.io/mitchallen/random-server:latest
           docker build . --tag ghcr.io/mitchallen/random-server:${tag}
