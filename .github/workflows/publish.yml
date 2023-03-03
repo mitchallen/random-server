@@ -22,6 +22,8 @@ jobs:
           image=ghcr.io/${GITHUB_REPOSITORY}
           # docker build . --tag ${image}:latest
           # docker push ${image}:latest
-          docker build . --tag ${image}:${tag}
-          docker push ${image}:${tag}
+          # docker build . --tag ${image}:${tag}
+          # docker push ${image}:${tag}
+          docker build . -t ${image}:${tag} -t ${image}:latest
+          docker push ${image} --all-tags
           
