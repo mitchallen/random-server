@@ -8,7 +8,7 @@ A simple REST API server that returns random JSON things.
 
     docker pull ghcr.io/mitchallen/random-server:latest
 
-### To pull older versions:
+### To pull older docker hub versions:
 
     docker pull mitchallen/random-server:latest
 
@@ -33,6 +33,35 @@ From the doc:
 * https://docs.docker.com/engine/reference/commandline/run/#parent-command
 
 *The docker run command first creates a writeable container layer over the specified image, and then starts it using the specified command. That is, docker run is equivalent to the API /containers/create then /containers/(id)/start. A stopped container can be restarted with all its previous changes intact using docker start. See docker ps -a to view a list of all containers.*
+
+## Docker network example
+
+The sleep statement is only need if you paste this all in at once:
+
+```sh
+docker network create tempnet
+
+docker run -itd --name rando \
+  --hostname rando --network tempnet \
+  ghcr.io/mitchallen/random-server
+    
+sleep 5
+
+docker ps
+
+docker inspect tempnet
+
+docker run --rm --network tempnet \
+  curlimages/curl:latest \
+  -s -H "Accept: application/json" \
+  http://rando:3100
+
+docker stop rando
+
+docker rm rando
+
+docker network rm tempnet
+```
 
 * * *
 
