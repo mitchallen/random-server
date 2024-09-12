@@ -36,7 +36,7 @@ From the doc:
 
 ## Docker network example
 
-The sleep statement is only need if you paste this all in at once:
+The sleep statement is only needed if you paste this all in at once:
 
 ```sh
 docker network create tempnet
