@@ -106,6 +106,25 @@ curl http://localhost:1220/v1/people
 curl http://localhost:1220/v1/people/1
 ```
 
+If you have `jq` installed:
+
+```sh
+curl -s http://localhost:1220/ | jq 
+```
+
+```sh
+curl -s http://localhost:1220/v1/people/1 | jq
+```
+
+```sh
+curl -s http://localhost:1220/v1/people | jq
+```
+
+```sh
+curl -s http://localhost:1220/v1 | jq
+```
+
+
 #### Example
 
 ```
