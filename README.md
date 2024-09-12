@@ -68,7 +68,7 @@ docker network rm tempnet
 
 ### Rerun with the same or a new container
 
-```
+```sh
 docker stop random-server
 docker rm random-server
 docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
@@ -98,7 +98,7 @@ You can generate new values by restarting the server.
 
 #### Random People
 
-```
+```sh
 curl http://localhost:1220
 curl http://localhost:1220/v1 
 curl http://localhost:1220/v1/people/count
@@ -127,7 +127,7 @@ curl -s http://localhost:1220/v1 | jq
 
 #### Example
 
-```
+```js
 {
 	"type": "people",
 	"prefix": "Mr.",
@@ -148,7 +148,7 @@ curl -s http://localhost:1220/v1 | jq
 
 Handy for testing what happens when an empty array is returned.
 
-```
+```sh
 curl http://localhost:1220/
 curl http://localhost:1220/v1
 curl http://localhost:1220/v1/empty
@@ -160,7 +160,7 @@ curl http://localhost:1220/v1/empty/1
 
 ### Randomy generated non-sense words
 
-```
+```sh
 curl http://localhost:1220/
 curl http://localhost:1220/v1
 curl http://localhost:1220/v1/words
@@ -170,7 +170,7 @@ curl http://localhost:1220/v1/words/1
 
 #### Example
 
-```
+```js
 {
 	"type": "words",
 	"value": "cezuwdi"
@@ -179,7 +179,7 @@ curl http://localhost:1220/v1/words/1
 
 #### Randomly generated values with non-sense names
 
-```
+```sh
 curl http://localhost:1220/
 curl http://localhost:1220/v1
 curl http://localhost:1220/v1/values
@@ -187,7 +187,7 @@ curl http://localhost:1220/v1/values/count
 curl http://localhost:1220/v1/values/1
 ```
 
-```
+```js
 {
 	"type": "values",
 	"name": "dafe",
@@ -197,7 +197,7 @@ curl http://localhost:1220/v1/values/1
 
 ### Random latitude and longitude
 
-```
+```sh
 curl http://localhost:1220/
 curl http://localhost:1220/v1
 curl http://localhost:1220/v1/coords
@@ -205,7 +205,7 @@ curl http://localhost:1220/v1/coords/count
 curl http://localhost:1220/v1/coords/1
 ```
 
-```
+```js
 {
 	"type": "coords",
 	"latitude": 88.43647,
@@ -219,7 +219,7 @@ curl http://localhost:1220/v1/coords/1
 
 You can run multiple containers on multiple ports like this:
 
-```
+```sh
 docker run -p 8101:3100 --name random1 ghcr.io/mitchallen/random-server:latest
 
 docker run -p 8102:3100 --name random2 ghcr.io/mitchallen/random-server:latest
@@ -231,13 +231,15 @@ Each server should have a unique set of values.
 
 ### Start and stop a running container
 
-    docker stop random-server
-    docker stop random1
-    docker stop random2
+```sh
+docker stop random-server
+docker stop random1
+docker stop random2
 
-    docker start random-server
-    docker start random1
-    docker start random2
+docker start random-server
+docker start random1
+docker start random2
+```
     
 * * *
 
@@ -245,14 +247,18 @@ Each server should have a unique set of values.
 
 #### Remove Container
 
-    docker stop random-server
-    docker rm random-server
+```sh
+docker stop random-server
+docker rm random-server
+```
 
 ### Remove Image
 
-    docker stop random-server
-    docker rm random-server
-    docker rmi ghcr.io/mitchallen/random-server:latest
+```sh
+docker stop random-server
+docker rm random-server
+docker rmi ghcr.io/mitchallen/random-server:latest
+```
 
 * * *
 
@@ -280,9 +286,11 @@ To trigger a new build via a github tag I do the following:
 
 Tags must match this format to trigger a build: /v[0-9.]+$/ 
 
-    git checkout main
-    git tag v1.1.0
-    git push origin --tags
+```sh
+git checkout main
+git tag v1.1.0
+git push origin --tags
+```
 
 This triggers two new builds of the Docker image: __v1.1.x__ and __latest__
 
@@ -290,15 +298,15 @@ Docker Cloud:
 
 * https://cloud.docker.com
 
-My Docker Hub page:
+My Docker Hub page for older projects:
 
 * https://hub.docker.com/u/mitchallen/
 
-Docker Hub page for this image
+Docker Hub page for the older image:
 
 * https://hub.docker.com/r/mitchallen/random-server/
 
-Docker Hub page for this images tags
+Docker Hub page for older image tags (before porting to github):
 
 * https://hub.docker.com/r/mitchallen/random-server/tags/
 
