@@ -1,7 +1,7 @@
 # docker build -t <your username>/random-server .
 # docker run -p 1220:3100 -d <your username>/random-server
 
-FROM node:8-alpine
+FROM node:22-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
