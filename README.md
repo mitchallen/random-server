@@ -55,7 +55,17 @@ docker inspect tempnet
 docker run --rm --network tempnet \
   curlimages/curl:latest \
   -s -H "Accept: application/json" \
-  http://rando:3100
+  http://rando:3100 | jq
+  
+docker run --rm --network tempnet \
+  curlimages/curl:latest \
+  -s -H "Accept: application/json" \
+  http://rando:3100/v1/people/1 | jq
+  
+docker run --rm --network tempnet \
+  curlimages/curl:latest \
+  -s -H "Accept: application/json" \
+  http://rando:3100/v1/people | jq
 
 docker stop rando
 
