@@ -41,7 +41,7 @@ The sleep statement is only needed if you paste this all in at once:
 ```sh
 docker network create tempnet
 
-docker run -itd --name rando \
+docker run --pull=always -itd --name rando \
   --hostname rando --network tempnet \
   ghcr.io/mitchallen/random-server
     
@@ -233,6 +233,16 @@ Each server should have a unique set of values.
     docker stop random-server
     docker rm random-server
     docker rmi ghcr.io/mitchallen/random-server:latest
+
+* * *
+
+## Publish
+
+### Publish using make
+
+```sh
+make publish
+```
 
 * * *
 
