@@ -25,8 +25,8 @@ jobs:
           tag=${tag:1}
           image=ghcr.io/${GITHUB_REPOSITORY}
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64 \\
-            -t ${image}:${tag} \\
-            -t ${image}:latest \\
+          docker buildx build --platform linux/amd64,linux/arm64 \
+            -t ${image}:${tag} \
+            -t ${image}:latest \
             --push .
           
