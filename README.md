@@ -2,10 +2,6 @@
 
 A simple REST API server that returns random JSON things.
 
-<a href="https://hub.docker.com/r/mitchallen/random-server/">
-<img src="https://img.shields.io/badge/mitchallen-random--server-green.svg?logo=docker&style=for-the-badge" />
-</a>
-
 ## Usage
 
 ### Pull the image from the repo
