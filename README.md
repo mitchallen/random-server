@@ -41,10 +41,11 @@ The sleep statement is only needed if you paste this all in at once:
 ```sh
 docker network create tempnet
 
-docker run --pull=always -itd --name rando \
-  --hostname rando --network tempnet \
+docker run --pull=always -itd \
+  --name rando --hostname rando \
+  --network tempnet \
   ghcr.io/mitchallen/random-server
-    
+  
 sleep 5
 
 docker ps
