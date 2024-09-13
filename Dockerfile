@@ -1,22 +1,41 @@
-# docker build -t <your username>/random-server .
-# docker run -p 1220:3100 -d <your username>/random-server
+# --- Stage 1 ---
 
-FROM node:22-alpine
+# Use an official Node.js runtime as a parent image
+FROM node:22-alpine AS builder
 
-# Create app directory
-WORKDIR /usr/src/app
+# Set the working directory to /app
+WORKDIR /app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-# If you are building your code for production
-RUN npm install --production
-
-# Bundle app source
+# Copy files to the container
 COPY . .
 
-EXPOSE 3100
+# Install dependencies
+RUN npm install
 
-CMD [ "npm", "start" ]
+# Clean project (just in case dist gets checked in)
+RUN npm run clean
+
+# Build TypeScript project
+RUN npm run build
+
+# --- Stage 2 ---
+
+FROM node:22.5-alpine AS prod
+
+# Set the working directory for Stage 2
+WORKDIR /app
+
+# Copy just the dist folder from Stage 1
+COPY --from=builder ./app/dist ./dist
+
+# Copy package.json, etc to root
+COPY package* ./
+
+# Install packages needed for prod
+RUN npm install --production
+
+# Set the container's default command to start the server
+CMD ["npm", "start"]
+
+# Expose port 3000
+EXPOSE 3000

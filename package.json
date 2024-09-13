@@ -4,19 +4,23 @@
   "description": "A simple REST API server that returns random JSON things",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "mocha test/unit --recursive --timeout 20000",
-    "test:server": "mocha test/server --recursive --timeout 20000",
-    "test-coverage": "./node_modules/.bin/istanbul cover _mocha -- -R spec test/**/*",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "//pretest": "npm start",
+    "test": "cucumber-js",
+    "clean": "rm -rf dist",
+    "check:local:port": "lsof -i :3100",
     "docker:build": "docker build -t mitchallen/random-server .",
     "docker:run": "docker run -d -p 1220:3100 --name random-server mitchallen/random-server",
-    "test:pets": "docker run -p 1221:3100 --name random-pets mitchallen/random-server",
-    "docker:start": "docker start random-server",
-    "docker:stop": "docker stop random-server",
-    "docker:rm": "docker rm random-server",
+    "docker:run:1221": "docker run -p 1221:3100 --name random-1221 mitchallen/random-server",
+    "docker:start": "docker start random-server random-1221",
+    "docker:stop": "docker stop random-server random-1221",
+    "docker:rm": "docker rm random-server random-1221",
+    "docker:clean": "npm run docker:stop && npm run docker:rm",
     "//": "may have to install watch utitlity",
     "watch:local": "watch -n 1 curl http://localhost:3100/",
-    "watch:container": "watch -n 1 curl http://localhost:1220/"
+    "watch:container": "watch -n 1 curl http://localhost:1220/",
+    "watch:container:1221": "watch -n 1 curl http://localhost:1221/"
   },
   "keywords": [],
   "repository": {
@@ -27,15 +31,21 @@
   "license": "MIT",
   "dependencies": {
     "@mitchallen/uptime": "0.0.8",
+    "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "chance": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^4.21.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^11.0.0",
+    "@types/chance": "^1.1.6",
+    "@types/cors": "^2.8.17",
     "istanbul": "^0.4.5",
     "mocha": "^10.2.0",
+    "reflect-metadata": "^0.2.2",
     "should": "^13.2.3",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "typescript": "^5.6.2"
   }
 }
