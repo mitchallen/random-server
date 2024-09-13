@@ -54,7 +54,7 @@ Then('the response should contain a version property', async function () {
 })
 
 When('the {string} endpoint is requested', async function (endpoint) {
-    this.response = await axios.get(`http://localhost:3100${endpoint}`);
+    this.response = await axios.get(`http://localhost:${TEST_PORT}${endpoint}`);
 });
 
 Then('the response should be a JSON array', function () {

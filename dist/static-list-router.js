@@ -5,7 +5,7 @@ const express_1 = require("express");
 const listRouter = (0, express_1.Router)();
 const staticListRouter = (spec = {}) => {
     const { appName = 'app', version = '0.0.1', label = 'objects', path = '/api', list = [{ id: 1, title: "TODO" }], port = '' } = spec;
-    console.log("vvv --- EXAMPLES --- vvv");
+    console.log("=== --- EXAMPLES --- ===");
     console.log(`curl http://localhost:${port}/`);
     console.log(`curl http://localhost:${port}${path}`);
     console.log(`curl http://localhost:${port}${path}/${label}`);
