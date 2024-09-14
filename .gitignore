@@ -39,11 +39,11 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
-jspm_packages/
+node_modules
+jspm_packages
 
 # Snowpack dependency directory (https://snowpack.dev/)
-web_modules/
+web_modules
 
 # TypeScript cache
 *.tsbuildinfo
@@ -108,13 +108,13 @@ dist
 .docusaurus
 
 # Serverless directories
-.serverless/
+.serverless
 
 # FuseBox cache
-.fusebox/
+.fusebox
 
 # DynamoDB Local files
-.dynamodb/
+.dynamodb
 
 # TernJS port file
 .tern-port
