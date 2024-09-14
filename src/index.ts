@@ -46,7 +46,7 @@ const swaggerOptions = {
         },
     },
     apis: [
-        './src/controllers/root.yaml',
+        './dist/root.yaml',
         // put future controller yaml here
     ],
 };
