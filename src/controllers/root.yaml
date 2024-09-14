@@ -1,0 +1,21 @@
+/:
+  get:
+    summary: Get the service status
+    tags: 
+      - service health
+    responses:
+      200:
+        description: Service status
+        content:
+          application/json:
+            schema:
+            type: object
+            example:
+              status: OK
+              app: app name
+              version: 1.0.0
+              explorer: /api-docs
+              uptime: 00:00:31
+              route: /
+      500:
+        description: Internal service error

@@ -1,5 +1,5 @@
 
-import {default as staticListRouter, StaticListRouterSpec} from './static-list-router';
+import {default as staticListRouter, StaticListRouterSpec} from '../static-list-router';
 
 const DEFAULT_COUNT = 5;
 

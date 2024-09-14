@@ -1,6 +1,6 @@
 
 import Chance from 'chance';
-import {default as staticListRouter, StaticListRouterSpec} from './static-list-router';
+import {default as staticListRouter, StaticListRouterSpec} from '../static-list-router';
 
 const chance = new Chance();
 
