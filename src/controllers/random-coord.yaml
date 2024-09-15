@@ -1,0 +1,106 @@
+components:
+  schemas:
+    Coord:
+      type: object
+      required:
+        - type
+        - latitude
+        - longitude
+      properties:
+        type:
+          type: string
+          description: The type defaults to coords
+        latitude:
+          type: number
+          description: The latitude coordinate
+        longitude:
+          type: number
+          description: The longitude coordinate
+      example:
+        name: coords
+        latitude: 41.726931
+        longitude: -49.948253
+paths:
+  /v1/coords:
+    parameters:
+      - in: header
+        name: x-api-key
+        schema:
+          type: string
+          default: demo-key
+        required: true
+        description: customer api key
+    get:
+      summary: Get an array of coords
+      tags: 
+        - coords
+      responses:
+        200:
+          description: An array of random coords.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coord'
+                example:
+                  - name: coords
+                    latitude: 41.726931
+                    longitude: -49.948253
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        498:
+          description: Token expired
+        500:
+          description: Internal server error
+  /v1/coords/{objectId}:
+    parameters:
+      - in: header
+        name: x-api-key
+        schema:
+          type: string
+          default: demo-key
+        required: true
+        description: customer api key
+    get:
+      summary: Get a coord by its objectId
+      parameters: 
+        - in: path
+          name: objectId
+          schema:
+            type: string
+          required: true
+          description: Unique objectId
+      tags: 
+        - coords
+      responses:
+        200:
+          description: The coord at the nth position.
+          content:
+            application/json:
+              schema:
+                type: object
+                item:
+                  $ref: '#/components/schemas/Coord'
+                example:
+                  name: coords
+                  latitude: 41.726931
+                  longitude: -49.948253
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        498:
+          description: Token expired
+        500:
+          description: Internal server error
