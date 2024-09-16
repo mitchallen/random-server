@@ -48,6 +48,7 @@ const swaggerOptions = {
     apis: [
         './dist/root.yaml',
         './dist/controllers/random-coord.yaml',
+        './dist/controllers/random-person.yaml',
         // put future controller yaml here
     ],
 };

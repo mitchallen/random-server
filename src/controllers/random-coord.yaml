@@ -17,7 +17,7 @@ components:
           type: number
           description: The longitude coordinate
       example:
-        name: coords
+        type: coords
         latitude: 41.726931
         longitude: -49.948253
 paths:
@@ -44,7 +44,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Coord'
                 example:
-                  - name: coords
+                  - type: coords
                     latitude: 41.726931
                     longitude: -49.948253
         400:
@@ -126,7 +126,7 @@ paths:
                 item:
                   $ref: '#/components/schemas/Coord'
                 example:
-                  name: coords
+                  type: coords
                   latitude: 41.726931
                   longitude: -49.948253
         400:

@@ -1,0 +1,199 @@
+components:
+  schemas:
+    Person:
+      type: object
+      required:
+        - type
+        - prefix
+        - first
+        - last
+        - age
+        - birthday
+        - gender
+        - zip
+        - ssnFour
+        - phone
+        - email
+      properties:
+        type:
+          type: string
+          description: Type defaults to people
+        prefix:
+          type: string
+          description: Name prefix (Dr., etc.)
+        first:
+          type: string
+          description: First name
+        last:
+          type: string
+          description: Last name
+        age:
+          type: number
+          description: Age
+        birthday:
+          type: string
+          description: Birthday in MM/DD/YYYY format
+        gender:
+          type: string
+          description: Gender
+        zip:
+          type: string
+          description: Zip code i zip+4 format
+        ssnFour:
+          type: string
+          description: The last four digits of the SSN
+        phone:
+          type: string
+          description: Phone number in US format (xxx) xxx-xxxx
+        email:
+          type: string
+          description: Email address
+      example:
+        type: people
+        prefix: Dr.
+        first: Rena
+        last: Dunn
+        age: 27
+        birthday: 8/30/1976
+        gender: female
+        zip: 73719-5785
+        ssnFour: 4353
+        phone: (508) 555-5676
+        email: isdal@vouz.mt
+paths:
+  /v1/people:
+    parameters:
+      - in: header
+        name: x-api-key
+        schema:
+          type: string
+          default: demo-key
+        required: true
+        description: customer api key
+    get:
+      summary: Get an array of people
+      tags: 
+        - people
+      responses:
+        200:
+          description: An array of random people.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+                example:
+                  - type: people
+                    prefix: Dr.
+                    first: Rena
+                    last: Dunn
+                    age: 27
+                    birthday: 8/30/1976
+                    gender: female
+                    zip: 73719-5785
+                    ssnFour: "4353"
+                    phone: (508) 555-5676
+                    email: isdal@vouz.mt
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        498:
+          description: Token expired
+        500:
+          description: Internal server error
+  /v1/people/count:
+    parameters:
+      - in: header
+        name: x-api-key
+        schema:
+          type: string
+          default: demo-key
+        required: true
+        description: customer api key
+    get:
+      summary: Get the count of people
+      tags:
+        - people
+      responses:
+        200:
+          description: The number of people.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                example:
+                  count: 100
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        498:
+          description: Token expired
+        500:
+          description: Internal server error
+  /v1/people/{objectId}:
+    parameters:
+      - in: header
+        name: x-api-key
+        schema:
+          type: string
+          default: demo-key
+        required: true
+        description: customer api key
+    get:
+      summary: Get a person by their objectId
+      parameters: 
+        - in: path
+          name: objectId
+          schema:
+            type: string
+          required: true
+          description: Unique objectId
+      tags: 
+        - people
+      responses:
+        200:
+          description: The person at the nth position.
+          content:
+            application/json:
+              schema:
+                type: object
+                item:
+                  $ref: '#/components/schemas/People'
+                example:
+                  type: people
+                  prefix: Dr.
+                  first: Rena
+                  last: Dunn
+                  age: 27
+                  birthday: 8/30/1976
+                  gender: female
+                  zip: 73719-5785
+                  ssnFour: "4353"
+                  phone: (508) 555-5676
+                  email: isdal@vouz.mt
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        404:
+          description: Not found
+        498:
+          description: Token expired
+        500:
+          description: Internal server error
