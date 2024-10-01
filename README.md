@@ -168,7 +168,7 @@ curl http://localhost:1220/v1/empty/1
 
 * * *
 
-### Randomy generated non-sense words
+### Randomly generated non-sense words
 
 ```sh
 curl http://localhost:1220/
