@@ -37,5 +37,5 @@ RUN npm install --production
 # Set the container's default command to start the server
 CMD ["npm", "start"]
 
-# Expose port 3000
-EXPOSE 3000
+# Document which port to use
+EXPOSE 3100
