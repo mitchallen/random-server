@@ -34,11 +34,13 @@ From the doc:
 
 *The docker run command first creates a writeable container layer over the specified image, and then starts it using the specified command. That is, docker run is equivalent to the API /containers/create then /containers/(id)/start. A stopped container can be restarted with all its previous changes intact using docker start. See docker ps -a to view a list of all containers.*
 
-## Using a Personal Access Token
+* * *
+
+## Using a GitHub Personal Access Token
 
 * Generate a token for reading packages here: https://github.com/settings/tokens/new
 
-* Here's how to store your GitHub Container Registry (ghcr.io) token in Docker's config.json:
+* Here's how to allow docker to access the GitHub Container Registry:
 
 First, create a Personal Access Token (PAT) in GitHub with the appropriate permissions:
 
@@ -53,8 +55,13 @@ Log in to ghcr.io using Docker:
 docker login ghcr.io -u YOUR_GITHUB_USERNAME
 ```
 
-When prompted for password, enter your PAT (not your GitHub password)
+When prompted for password, enter your PAT (not your GitHub password).
 
+You could also store the token in (SECURE!) env var and pipe it in.
+
+If you are familiar with **gh** that can also help with login.
+
+* * *
 
 ## Docker network example
 
