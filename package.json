@@ -47,7 +47,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "copyfiles": "^2.4.1",
     "istanbul": "^0.4.5",
-    "mocha": "^10.2.0",
+    "mocha": "^10.8.2",
     "reflect-metadata": "^0.2.2",
     "should": "^13.2.3",
     "supertest": "^3.4.2",
