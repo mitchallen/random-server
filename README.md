@@ -55,25 +55,6 @@ docker login ghcr.io -u YOUR_GITHUB_USERNAME
 
 When prompted for password, enter your PAT (not your GitHub password)
 
-This will automatically store the credentials in ~/.docker/config.json (Linux/Mac) or %USERPROFILE%\.docker\config.json (Windows).
-
-You can verify the token is stored by checking the config file:
-
-```sh
-cat ~/.docker/config.json
-```
-
-You should see something like:
-
-```js
-{
-  "auths": {
-    "ghcr.io": {
-      "auth": "base64encoded_credentials"
-    }
-  }
-}
-```
 
 ## Docker network example
 
