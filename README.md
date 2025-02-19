@@ -34,6 +34,23 @@ From the doc:
 
 *The docker run command first creates a writeable container layer over the specified image, and then starts it using the specified command. That is, docker run is equivalent to the API /containers/create then /containers/(id)/start. A stopped container can be restarted with all its previous changes intact using docker start. See docker ps -a to view a list of all containers.*
 
+## Using a Personal Access Token
+
+* Generate a token for reading packages here: https://github.com/settings/tokens/new
+* Add the token to ~/.docker/config.json
+
+```js
+{
+	"auths": {
+		"ghcr.io": {
+			"auth": "YOUR_GH_TOKEN",
+		}},
+		...
+	},
+	...
+}
+```
+
 ## Docker network example
 
 The sleep statement is only needed if you paste this all in at once:
