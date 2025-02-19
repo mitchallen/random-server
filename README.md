@@ -43,8 +43,8 @@ From the doc:
 {
 	"auths": {
 		"ghcr.io": {
-			"auth": "YOUR_GH_TOKEN",
-		}},
+			"auth": "YOUR_GH_TOKEN"
+		},
 		...
 	},
 	...
