@@ -37,17 +37,41 @@ From the doc:
 ## Using a Personal Access Token
 
 * Generate a token for reading packages here: https://github.com/settings/tokens/new
-* Add the token to ~/.docker/config.json
+
+* Here's how to store your GitHub Container Registry (ghcr.io) token in Docker's config.json:
+
+First, create a Personal Access Token (PAT) in GitHub with the appropriate permissions:
+
+* Go to GitHub Settings → Developer Settings → Personal Access Tokens
+* Select "Fine-grained tokens" or "Classic tokens"
+* Ensure it has read:packages and write:packages permissions
+
+
+Log in to ghcr.io using Docker:
+
+```sh
+docker login ghcr.io -u YOUR_GITHUB_USERNAME
+```
+
+When prompted for password, enter your PAT (not your GitHub password)
+
+This will automatically store the credentials in ~/.docker/config.json (Linux/Mac) or %USERPROFILE%\.docker\config.json (Windows).
+
+You can verify the token is stored by checking the config file:
+
+```sh
+cat ~/.docker/config.json
+```
+
+You should see something like:
 
 ```js
 {
-	"auths": {
-		"ghcr.io": {
-			"auth": "YOUR_GH_TOKEN"
-		},
-		...
-	},
-	...
+  "auths": {
+    "ghcr.io": {
+      "auth": "base64encoded_credentials"
+    }
+  }
 }
 ```
 
