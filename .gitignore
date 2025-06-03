@@ -7,6 +7,21 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+# MacOS
+.DS_Store
+# Thumbnails
+._*
+# Windows
+Thumbs.db
+# IDEs and editors
+.idea/
+.vscode/
+# Temporary files
+*.swp
+# Compiled source #
+# Compiled JavaScript files
+
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
