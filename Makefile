@@ -11,6 +11,7 @@ help:
 	@echo "  make publish   - Checkout main branch, bump version, and push changes with tags"
 	@echo "  make build     - Compile TypeScript files using tsc"
 	@echo "  make help      - Display this help message"
+	@echo "  make test      - Run the tests"
 
 # Define the publish target
 .PHONY: publish
@@ -28,3 +29,9 @@ build:
 	@echo "Compiling TypeScript..."
 	npm run build
 	@echo "TypeScript compilation complete!"
+
+# Define the test target
+.PHONY: test
+test:
+	@echo "Running tests..."
+	npm test
