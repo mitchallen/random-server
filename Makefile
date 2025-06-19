@@ -14,6 +14,8 @@ help:
 	@echo "  make test        - Run the tests"
 	@echo "  make scan        - Check the Docker container for vulnerabilities"
 	@echo "  make docker-build - Build Docker image locally"
+	@echo "  make docker-rm    - Remove the Docker image"
+	@echo "  make docker-prune - Clean up/prune unused Docker data"
 
 # Define the publish target
 .PHONY: publish
@@ -49,3 +51,15 @@ scan:
 docker-build:
 	@echo "Building Docker image locally..."
 	docker build -t random-server .
+
+# Remove Docker image
+.PHONY: docker-rm
+docker-rm:
+	@echo "Removing Docker image..."
+	-docker rmi random-server
+
+# Cleanup/prune Docker system
+.PHONY: docker-prune
+docker-prune:
+	@echo "Pruning unused Docker data..."
+	docker system prune -f
