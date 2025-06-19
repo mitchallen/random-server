@@ -1,7 +1,7 @@
 # --- Stage 1 ---
 
-# Use an official Node.js runtime as a parent image
-FROM node:22-alpine AS builder
+# Use Node.js 24 Alpine image as a parent image
+FROM node:24-alpine AS builder
 
 # Set the working directory to /app
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN npm run build
 
 # --- Stage 2 ---
 
-FROM node:22.5-alpine AS prod
+FROM node:24-alpine AS prod
 
 # Set the working directory for Stage 2
 WORKDIR /app

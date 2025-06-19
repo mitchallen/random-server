@@ -46,9 +46,9 @@ scan:
 	@echo "Scanning Docker image for vulnerabilities..."
 	@docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image random-server || echo "Trivy scan failed. Is the image built?"
 
-# Build Docker image locally
+# Build Docker image locally (runs regular build first)
 .PHONY: docker-build
-docker-build:
+docker-build: build
 	@echo "Building Docker image locally..."
 	docker build -t random-server .
 
