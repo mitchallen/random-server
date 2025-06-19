@@ -63,3 +63,9 @@ docker-rm:
 docker-prune:
 	@echo "Pruning unused Docker data..."
 	docker system prune -f
+
+# Clean build artifacts and dependencies
+.PHONY: clean
+clean:
+	@echo "Cleaning build artifacts and dependencies..."
+	rm -rf dist node_modules package-lock.json
