@@ -7,6 +7,7 @@ A simple REST API server that returns random JSON things.
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/virtualmitch)
 
 [![Docker Image](https://img.shields.io/badge/Docker-ghcr.io%2Fmitchallen%2Frandom--server-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/mitchallen/random-server/pkgs/container/random-server)
+[![Docker Hub](https://img.shields.io/docker/v/mitchallen/random-server?label=Docker%20Hub&style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/mitchallen/random-server)
 
 * * *
 
