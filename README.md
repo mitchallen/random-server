@@ -16,7 +16,7 @@ A simple REST API server that returns random JSON things.
 
     docker pull ghcr.io/mitchallen/random-server:latest
 
-### To pull older docker hub versions:
+### To pull docker hub versions:
 
     docker pull mitchallen/random-server:latest
 
