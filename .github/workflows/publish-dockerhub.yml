@@ -30,3 +30,11 @@ jobs:
             -t ${image}:${tag} \
             -t ${image}:latest \
             --push .
+
+      - name: Update Docker Hub README
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: mitchallen/random-server
+          readme-filepath: ./README.md
