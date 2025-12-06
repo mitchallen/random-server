@@ -19,7 +19,7 @@ interface CustomRequest extends ExpressRequest {
     };
 }
 
-const APP_NAME = 'random-server';
+const APP_NAME = process.env.APP_NAME || 'random-server';
 const APP_VERSION = require("../package.json").version;
 const PATH = '/v1';
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3100;
