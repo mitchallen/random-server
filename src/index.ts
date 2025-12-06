@@ -1,4 +1,3 @@
-import path from "path";
 import express, { Request, Response } from 'express';
 import { Request as ExpressRequest } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -23,11 +22,17 @@ interface CustomRequest extends ExpressRequest {
 const BASE_PATH = process.env.BASE_PATH || "/";
 const APP_NAME = process.env.APP_NAME || 'random-server';
 const APP_VERSION = require("../package.json").version;
-const PATH = path.join(BASE_PATH, '/v1')
+// Helper function to join URL paths correctly
+const joinUrlPath = (base: string, ...paths: string[]): string => {
+    const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base;
+    const normalizedPaths = paths.map(p => p.startsWith('/') ? p : '/' + p);
+    return normalizedBase + normalizedPaths.join('');
+};
+const PATH = joinUrlPath(BASE_PATH, '/v1');
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3100;
 
 // swagger 
-const EXPLORER_PATH = path.join(BASE_PATH, '/api-docs');
+const EXPLORER_PATH = joinUrlPath(BASE_PATH, '/api-docs');
 const AUTHOR = "Mitch Allen"
 const API_TITLE = "random-server"
 const API_TAG_LINE = "Random JSON Server API"
@@ -131,14 +136,14 @@ app.use(PATH, randomValue);
 app.use(PATH, randomCoord);
 app.use(PATH, randomPersons);
 
-app.get('/', (req: Request, res: Response) => {
+app.get(BASE_PATH, (req: Request, res: Response) => {
     res.json({
         status: 'OK',
         app: APP_NAME,
         version: APP_VERSION,
         uptime: uptime.toHHMMSS(),
         explorer: EXPLORER_PATH,
-        route: "/",
+        route: BASE_PATH,
     });
 });
 
