@@ -1,3 +1,4 @@
+import path from "path";
 import express, { Request, Response } from 'express';
 import { Request as ExpressRequest } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
@@ -19,13 +20,14 @@ interface CustomRequest extends ExpressRequest {
     };
 }
 
+const BASE_PATH = process.env.BASE_PATH || "/";
 const APP_NAME = process.env.APP_NAME || 'random-server';
 const APP_VERSION = require("../package.json").version;
-const PATH = '/v1';
+const PATH = path.join(BASE_PATH, '/v1')
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3100;
 
 // swagger 
-const EXPLORER_PATH = '/api-docs';
+const EXPLORER_PATH = path.join(BASE_PATH, '/api-docs');
 const AUTHOR = "Mitch Allen"
 const API_TITLE = "random-server"
 const API_TAG_LINE = "Random JSON Server API"
@@ -38,6 +40,12 @@ let customSwaggerOptions = {
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
+        servers: [
+            {
+                "url": BASE_PATH,     // e.g. "/api/service1"
+                "description": "Mounted base path"
+            }
+        ],
         info: {
             title: API_TITLE,
             version: APP_VERSION,
