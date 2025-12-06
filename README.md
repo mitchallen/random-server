@@ -24,6 +24,16 @@ This example runs the server locally on port 1220.
 docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:latest
 ```
 
+### Override APP_NAME
+
+You can override the application name using the `APP_NAME` environment variable:
+
+```sh
+docker run -p 1220:3100 -e APP_NAME=my-custom-server --name random-server ghcr.io/mitchallen/random-server:latest
+```
+
+The `APP_NAME` will appear in the root endpoint response and 404 error responses. If not set, it defaults to `random-server`.
+
 From the doc:
 
 * https://docs.docker.com/engine/reference/commandline/run/#parent-command
