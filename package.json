@@ -32,11 +32,11 @@
   "dependencies": {
     "@mitchallen/uptime": "0.0.8",
     "axios": "^1.12.0",
-    "body-parser": "^1.20.3",
+    "body-parser": "^1.20.4",
     "brace-expansion": "2.0.2",
     "chance": "^1.1.0",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
+    "express": "^4.22.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
