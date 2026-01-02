@@ -1,6 +1,6 @@
 {
   "name": "random-server",
-  "version": "2.1.23",
+  "version": "2.1.24",
   "description": "A simple REST API server that returns random JSON things",
   "main": "dist/index.js",
   "scripts": {
