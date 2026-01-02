@@ -1,41 +1,28 @@
-# --- Stage 1 ---
-
-# Use Node.js 24 Alpine image as a parent image
+# --- Stage 1: Build ---
 FROM node:24-alpine AS builder
-
-# Set the working directory to /app
 WORKDIR /app
 
-# Copy files to the container
+# Copy package files first for better caching
+COPY package*.json ./
+RUN npm ci
+
+# Copy source and build
 COPY . .
+RUN npm run clean && npm run build
 
-# Install dependencies
-RUN npm install
-
-# Clean project (just in case dist gets checked in)
-RUN npm run clean
-
-# Build TypeScript project
-RUN npm run build
-
-# --- Stage 2 ---
-
+# --- Stage 2: Production ---
 FROM node:24-alpine AS prod
-
-# Set the working directory for Stage 2
 WORKDIR /app
 
-# Copy just the dist folder from Stage 1
-COPY --from=builder ./app/dist ./dist
+# Copy package files and install prod dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Copy package.json, etc to root
-COPY package* ./
+# Copy built artifacts
+COPY --from=builder /app/dist ./dist
 
-# Install packages needed for prod
-RUN npm install --production
+# Security: run as non-root
+USER node
 
-# Set the container's default command to start the server
-CMD ["npm", "start"]
-
-# Document which port to use
 EXPOSE 3100
+CMD ["node", "dist/index.js"]
