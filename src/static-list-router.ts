@@ -49,7 +49,7 @@ export const staticListRouter = (spec: StaticListRouterSpec = {}) => {
 
     listRouter.get(`/${label}/:id`, (req: Request, res: Response) => {
         // convert from 1 based to 0 based array
-        const id = parseInt(req.params.id, 10) - 1;
+        const id = parseInt(req.params.id as string, 10) - 1;
         if (id < 0 || id >= list.length) {
             res.status(404).send(`id ${req.params.id} out of range [1 - ${list.length}]`);
         } else {
