@@ -40,6 +40,9 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
+  "overrides": {
+    "serialize-javascript": "^7.0.5"
+  },
   "devDependencies": {
     "@cucumber/cucumber": "^12.2.0",
     "@types/chance": "^1.1.6",
