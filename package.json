@@ -41,7 +41,12 @@
     "swagger-ui-express": "^5.0.1"
   },
   "overrides": {
-    "serialize-javascript": "^7.0.5"
+    "serialize-javascript": "^7.0.5",
+    "copyfiles": {
+      "minimatch": {
+        "brace-expansion": ">=1.1.13"
+      }
+    }
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.2.0",
