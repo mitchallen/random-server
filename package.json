@@ -31,7 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "@mitchallen/uptime": "0.0.8",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "body-parser": "^1.20.4",
     "brace-expansion": "5.0.5",
     "chance": "^1.1.0",
