@@ -1,5 +1,7 @@
 # random-server
 
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/random-server?sort=semver&label=version)](https://github.com/mitchallen/random-server/tags)
+
 A simple REST API server that returns random JSON things.
 
 * * *
