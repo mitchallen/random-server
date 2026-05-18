@@ -309,49 +309,23 @@ docker rmi ghcr.io/mitchallen/random-server:latest
 
 ## Publish
 
-### Publish using make
+Builds are automated via GitHub Actions and triggered by pushing a version tag.
+
+Bump the version, commit, tag, and push:
 
 ```sh
-make publish
+npm version patch --no-git-tag-version
+git add package.json package-lock.json
+git commit -m "2.x.x"
+git tag v2.x.x
+git push origin main
+git push origin v2.x.x
 ```
 
-* * *
+Tags matching `v*` trigger two workflows that build and push multi-platform (`linux/amd64`, `linux/arm64`) images to:
 
-### Automated Docker Builds
+* **GitHub Container Registry:** `ghcr.io/mitchallen/random-server`
+* **Docker Hub:** `mitchallen/random-server`
 
-#### Note that this section needs revision
-
-New builds of the image were originally created automatically using Docker Cloud.
-
-Current builds are built and hosted via GitHub. 
-
-To trigger a new build via a github tag I do the following:
-
-*NOTE: using annotated tags didn't trigger a new build. Use the simpler format.*
-
-Tags must match this format to trigger a build: /v[0-9.]+$/ 
-
-```sh
-git checkout main
-git tag v1.1.0
-git push origin --tags
-```
-
-This triggers two new builds of the Docker image: __v1.1.x__ and __latest__
-
-Docker Cloud:
-
-* https://cloud.docker.com
-
-My Docker Hub page for older projects:
-
-* https://hub.docker.com/u/mitchallen/
-
-Docker Hub page for the older image:
-
-* https://hub.docker.com/r/mitchallen/random-server/
-
-Docker Hub page for older image tags (before porting to github):
-
-* https://hub.docker.com/r/mitchallen/random-server/tags/
+Each publish creates both a versioned tag and updates `latest`.
 
