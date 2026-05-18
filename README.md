@@ -129,6 +129,16 @@ docker run -p 1220:3100 --name random-server ghcr.io/mitchallen/random-server:la
     
 * * *
 
+### Swagger Explorer
+
+Once the container is running, the interactive API explorer is available at:
+
+```
+http://localhost:1220/api-docs
+```
+
+* * *
+
 ### Test with curl commands
 
 Assumes container is running and set to port 1220.
