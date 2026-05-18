@@ -1,6 +1,6 @@
 # random-server
 
-[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/random-server?sort=semver&label=version)](https://github.com/mitchallen/random-server/tags)
+[![GitHub tag](https://img.shields.io/github/v/tag/mitchallen/random-server?sort=semver&label=version)](https://github.com/mitchallen/random-server/tags) [![Docker Hub](https://img.shields.io/docker/v/mitchallen/random-server?sort=semver&label=docker%20hub)](https://hub.docker.com/r/mitchallen/random-server)
 
 A simple REST API server that returns random JSON things.
 
