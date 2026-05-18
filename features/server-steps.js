@@ -1,5 +1,4 @@
 const assert = require('assert');
-const axios = require('axios');
 const { setWorldConstructor, Given, When, Then, BeforeAll, AfterAll } = require('@cucumber/cucumber');
 const { spawn } = require('child_process');
 
@@ -45,7 +44,8 @@ Given('the server is running', function () {
 });
 
 When('the root endpoint is requested', async function () {
-    this.world.root.response = await axios.get(this.world.serviceUrl);
+    const res = await fetch(this.world.serviceUrl);
+    this.world.root.response = { data: await res.json() };
 })
 
 Then('the response should contain a version property', async function () {
@@ -54,7 +54,8 @@ Then('the response should contain a version property', async function () {
 })
 
 When('the {string} endpoint is requested', async function (endpoint) {
-    this.response = await axios.get(`http://localhost:${TEST_PORT}${endpoint}`);
+    const res = await fetch(`http://localhost:${TEST_PORT}${endpoint}`);
+    this.response = { data: await res.json() };
 });
 
 Then('the response should be a JSON array', function () {
