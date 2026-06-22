@@ -36,6 +36,22 @@ docker run -p 1220:3100 -e APP_NAME=my-custom-server --name random-server ghcr.i
 
 The `APP_NAME` will appear in the root endpoint response and 404 error responses. If not set, it defaults to `random-server`.
 
+### Require an API key
+
+The `/v1` routes can require an `x-api-key` header. Enforcement is **off by default** and turns on only when you set the `API_KEY` environment variable at launch:
+
+```sh
+docker run -p 1220:3100 -e API_KEY=your-secret-key --name random-server ghcr.io/mitchallen/random-server:latest
+```
+
+With `API_KEY` set, requests to `/v1/*` must send a matching header or receive `401 unauthorized`:
+
+```sh
+curl -H "x-api-key: your-secret-key" http://localhost:1220/v1/people
+```
+
+The root (`/`) health check and the Swagger explorer (`/api-docs`) remain open regardless. If `API_KEY` is not set, the API is open (no key required).
+
 From the doc:
 
 * https://docs.docker.com/engine/reference/commandline/run/#parent-command
