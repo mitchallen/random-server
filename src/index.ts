@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { Request as ExpressRequest } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -30,6 +30,24 @@ const joinUrlPath = (base: string, ...paths: string[]): string => {
 };
 const PATH = joinUrlPath(BASE_PATH, '/v1');
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 3100;
+
+// Optional API key. When API_KEY is set at launch, the /v1 routes require a
+// matching x-api-key header; when unset, the API is open (no enforcement).
+const API_KEY = process.env.API_KEY;
+const apiKeyGuard = (req: Request, res: Response, next: NextFunction) => {
+    if (!API_KEY) {
+        return next();
+    }
+    if (req.header('x-api-key') === API_KEY) {
+        return next();
+    }
+    return res.status(401).json({
+        status: '401',
+        error: 'unauthorized',
+        app: APP_NAME,
+        version: APP_VERSION,
+    });
+};
 
 // swagger 
 const EXPLORER_PATH = joinUrlPath(BASE_PATH, '/api-docs');
@@ -129,6 +147,9 @@ const randomCoord = randomCoordRouter(randomConfig);
 const randomPersons = randomPersonRouter(randomConfig);
 
 app.use(cors());
+
+// Guard the API routes with the optional API key
+app.use(PATH, apiKeyGuard);
 
 app.use(PATH, emptyRecords);
 app.use(PATH, randomWords);

@@ -7,9 +7,15 @@ const TEST_PORT = process.env.TEST_PORT || PORT;
 
 let serverProcess;
 
+const API_KEY = 'demo-key';
+
 BeforeAll(async function () {
-    // Start the server
-    serverProcess = spawn('npm', ['start'], { stdio: 'inherit' });
+    // Start the server with API key enforcement enabled so the auth
+    // scenarios exercise the guard.
+    serverProcess = spawn('npm', ['start'], {
+        stdio: 'inherit',
+        env: { ...process.env, API_KEY },
+    });
 
     // Wait for the server to start (you might need to adjust the delay)
     await new Promise(resolve => setTimeout(resolve, 5000));
@@ -54,8 +60,28 @@ Then('the response should contain a version property', async function () {
 })
 
 When('the {string} endpoint is requested', async function (endpoint) {
-    const res = await fetch(`http://localhost:${TEST_PORT}${endpoint}`);
-    this.response = { data: await res.json() };
+    const res = await fetch(`http://localhost:${TEST_PORT}${endpoint}`, { headers: this.world.headers });
+    this.response = { status: res.status, data: await res.json() };
+});
+
+When('the {string} endpoint is requested without an api key', async function (endpoint) {
+    const res = await fetch(`http://localhost:${TEST_PORT}${endpoint}`, { headers: { accept: 'application/json' } });
+    this.response = { status: res.status, data: await res.json() };
+});
+
+When('the {string} endpoint is requested with an invalid api key', async function (endpoint) {
+    const res = await fetch(`http://localhost:${TEST_PORT}${endpoint}`, {
+        headers: { accept: 'application/json', 'x-api-key': 'wrong-key' },
+    });
+    this.response = { status: res.status, data: await res.json() };
+});
+
+Then('the response status should be {int}', function (status) {
+    assert.strictEqual(this.response.status, status);
+});
+
+Then('the response should have error {string}', function (error) {
+    assert.strictEqual(this.response.data.error, error);
 });
 
 Then('the response should be a JSON array', function () {
