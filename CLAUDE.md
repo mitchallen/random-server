@@ -1,7 +1,7 @@
 # random-server — notes for Claude
 
 A REST API server that returns random JSON data (people, words, values, coords,
-and an always-empty route). TypeScript + Express 4, Cucumber tests, Swagger UI
+and an always-empty route). TypeScript + Express 5, Cucumber tests, Swagger UI
 at `/api-docs`, optional `API_KEY` auth, graceful shutdown, multi-stage Docker
 on Node 24, published to GHCR + Docker Hub via tag-triggered workflows.
 
@@ -10,7 +10,15 @@ on Node 24, published to GHCR + Docker Hub via tag-triggered workflows.
 Check these before starting new work — pick up, update, or close as appropriate.
 Run `gh issue list` for the current state.
 
-- **[#48 Upgrade to Express 5](https://github.com/mitchallen/random-server/issues/48)** — the one place random-server lags thing-server. Bump Express **and** fix the bare `app.get('*', ...)` 404 route to `app.get('/*splat', ...)` in the same change (path-to-regexp v8). thing-server already did this; use it as the reference.
+- _No open issues._ (#48, the Express 5 upgrade, was completed in PR #54.)
+
+Known cleanup, not yet ticketed:
+
+- **`body-parser` is a dead direct dependency.** Nothing in `src/` or `features/`
+  imports it — the code uses `express.json()`. Since the Express 5 upgrade the
+  tree carries two copies: the vestigial direct `body-parser@1.x` and Express's
+  own bundled `body-parser@2.x`. Safe to drop from `dependencies`; it only
+  generates Dependabot noise for a package the app never loads.
 
 ## Conventions
 
@@ -24,6 +32,12 @@ Run `gh issue list` for the current state.
 - **Release:** bump the version and push a `v*` tag → the publish workflows build
   and push multi-platform images to GHCR + Docker Hub and sync the README to
   Docker Hub. See the README "Publish" section.
+- **Routing (Express 5 / path-to-regexp v8):** bare `*` wildcards are gone — a
+  route like `app.get('*', ...)` throws `PathError: Missing parameter name` at
+  **boot**, not at request time, so it takes the whole server down. Use the named
+  form `app.get('/*splat', ...)` (see the 404 catch-all at the end of
+  `src/index.ts`, which must stay last). Named `:id` params are unchanged.
+  `req.param()`, `res.sendfile()` and `app.del()` are also removed.
 - **API key:** `/v1` routes require `x-api-key` only when `API_KEY` is set at
   launch; root `/` and `/api-docs` stay open. If `API_KEY` is unset the API is open.
 - Default branch is `main`. Work on a branch and open a PR (CI gates merges).
