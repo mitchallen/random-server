@@ -31,7 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "@mitchallen/uptime": "0.0.8",
-    "body-parser": "^1.20.4",
+    "body-parser": "^1.20.6",
     "chance": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^4.22.1",
@@ -39,12 +39,12 @@
     "swagger-ui-express": "^5.0.1"
   },
   "overrides": {
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^4.3.0",
     "qs": ">=6.15.2",
-    "brace-expansion": ">=5.0.6",
+    "brace-expansion": ">=5.0.7",
     "copyfiles": {
       "minimatch": {
-        "brace-expansion": ">=1.1.13"
+        "brace-expansion": ">=5.0.7"
       }
     }
   },
