@@ -169,7 +169,9 @@ app.get(BASE_PATH, (req: Request, res: Response) => {
 });
 
 // 404 - MUST BE LAST
-app.get('*', (req: Request, res: Response) => {
+// Express 5 (path-to-regexp v8) removed bare '*' wildcards; '/*splat' is the
+// named-wildcard equivalent that matches any unhandled path.
+app.get('/*splat', (req: Request, res: Response) => {
     res.status(404).json({
         status: '404',
         error: 'not found',
