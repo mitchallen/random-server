@@ -12,14 +12,6 @@ Run `gh issue list` for the current state.
 
 - _No open issues._ (#48, the Express 5 upgrade, was completed in PR #54.)
 
-Known cleanup, not yet ticketed:
-
-- **`body-parser` is a dead direct dependency.** Nothing in `src/` or `features/`
-  imports it — the code uses `express.json()`. Since the Express 5 upgrade the
-  tree carries two copies: the vestigial direct `body-parser@1.x` and Express's
-  own bundled `body-parser@2.x`. Safe to drop from `dependencies`; it only
-  generates Dependabot noise for a package the app never loads.
-
 ## Conventions
 
 - **TypeScript build:** source in `src/`, compiled to `dist/` via `npm run build`
@@ -38,6 +30,10 @@ Known cleanup, not yet ticketed:
   form `app.get('/*splat', ...)` (see the 404 catch-all at the end of
   `src/index.ts`, which must stay last). Named `:id` params are unchanged.
   `req.param()`, `res.sendfile()` and `app.del()` are also removed.
+- **Body parsing:** use the built-in `express.json()` (see `src/index.ts`, which
+  wires it with a `verify` hook that rejects malformed JSON with a 400). Don't
+  re-add `body-parser` as a direct dependency — Express 5 bundles its own copy,
+  and a second one is dead weight plus a Dependabot alert surface.
 - **API key:** `/v1` routes require `x-api-key` only when `API_KEY` is set at
   launch; root `/` and `/api-docs` stay open. If `API_KEY` is unset the API is open.
 - Default branch is `main`. Work on a branch and open a PR (CI gates merges).
