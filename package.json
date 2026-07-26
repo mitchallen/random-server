@@ -34,7 +34,7 @@
     "body-parser": "^1.20.6",
     "chance": "^1.1.0",
     "cors": "^2.8.5",
-    "express": "^4.22.1",
+    "express": "^5.2.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   },
@@ -52,6 +52,7 @@
     "@cucumber/cucumber": "^12.2.0",
     "@types/chance": "^1.1.6",
     "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.6",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "copyfiles": "^2.4.1",
