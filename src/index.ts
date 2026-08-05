@@ -3,7 +3,7 @@ import { Request as ExpressRequest } from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import uptime from '@mitchallen/uptime';
+import { toHHMMSS } from './uptime';
 import emptyRouter from './controllers/random-empty-router';
 import randomWordRouter from './controllers/random-word-router';
 import randomValueRouter from './controllers/random-value-router';
@@ -162,7 +162,7 @@ app.get(BASE_PATH, (req: Request, res: Response) => {
         status: 'OK',
         app: APP_NAME,
         version: APP_VERSION,
-        uptime: uptime.toHHMMSS(),
+        uptime: toHHMMSS(),
         explorer: EXPLORER_PATH,
         route: BASE_PATH,
     });
