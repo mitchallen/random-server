@@ -25,3 +25,47 @@ jobs:
 
       - name: Run Cucumber tests
         run: npm test
+
+  # The publish workflows only run on `v*` tags, so without this job a broken
+  # Dockerfile or build script would not surface until release time. Builds the
+  # image and smoke-tests the container; never pushes.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build the Docker image
+        run: docker build -t random-server:ci .
+
+      - name: Smoke test the container
+        run: |
+          set -euo pipefail
+          docker run -d --name rs-ci -p 3100:3100 random-server:ci
+
+          # Wait for the server to accept connections, failing loudly if it
+          # never does (a crash-looping container would otherwise just hang).
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3100/ >/dev/null; then break; fi
+            if [ "$i" = "30" ]; then
+              echo "container never became ready; logs:" >&2
+              docker logs rs-ci >&2
+              exit 1
+            fi
+            sleep 1
+          done
+
+          curl -sf http://localhost:3100/ | grep -q '"status":"OK"'
+          curl -sf http://localhost:3100/v1/people/1 | grep -q '"type":"people"'
+
+          # The swagger yaml files are copied into dist/ by a build script, so
+          # assert on strings that can ONLY come from those files — grepping for
+          # "openapi" would pass even with every yaml missing, since the base
+          # definition is inlined in src/index.ts.
+          curl -sf http://localhost:3100/api-docs/swagger-ui-init.js > spec.js
+          grep -q 'Get the service status' spec.js  # from dist/root.yaml
+          grep -q 'ssnFour' spec.js                 # from dist/controllers/random-person.yaml
+          echo "container smoke test passed"
+
+      - name: Container logs
+        if: always()
+        run: docker logs rs-ci || true
