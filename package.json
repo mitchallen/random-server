@@ -30,7 +30,6 @@
   "author": "Mitch Allen <npm@mitchallen.com> (http://mitchallen.com)",
   "license": "MIT",
   "dependencies": {
-    "@mitchallen/uptime": "0.0.8",
     "chance": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^5.2.1",
