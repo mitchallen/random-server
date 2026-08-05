@@ -53,6 +53,15 @@ Run `gh issue list` for the current state.
   github-actions. `@types/*` and other minor/patch npm bumps are **grouped**
   into single PRs; majors stay individual so each gets its own review. Security
   updates are independent of this file and arrive regardless.
+- **Low-risk Dependabot PRs auto-merge** via
+  `.github/workflows/dependabot-auto-merge.yml`: all github-actions updates,
+  plus npm/docker **minor and patch**. Majors always stay manual — the
+  TypeScript 5.9 → 7.0 bump broke the build and the Node 24 → 25 base image was
+  declined, and both needed a human. This relies on branch protection: `main`
+  requires the `test` and `docker` checks, which is what native auto-merge
+  waits for. Without required checks, auto-merge would land PRs *without* CI
+  gating them. `enforce_admins` is off, so direct version-bump pushes to `main`
+  still work.
 - **Transitive CVEs are pinned via `overrides`,** not by adding direct
   dependencies — see the `overrides` block in `package.json` (`js-yaml`, `qs`,
   `brace-expansion`). When a follow-up advisory lands for something already
