@@ -1,0 +1,54 @@
+version: 2
+
+# Security alerts are on by default and are NOT configured here — Dependabot
+# opens those regardless. This file adds *version* updates, so routine bumps
+# land as reviewable PRs instead of only arriving as security fixes after a
+# CVE. Every PR is gated by .github/workflows/test.yml (build + Cucumber).
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: build(deps)
+      prefix-development: build(deps-dev)
+    groups:
+      # The @types/* packages track their runtime counterparts and are
+      # type-only, so batching them keeps a week's worth to one PR.
+      types:
+        patterns:
+          - "@types/*"
+      # Non-breaking bumps of everything else, batched. Majors stay
+      # individual so express/cucumber upgrades get their own review.
+      minor-and-patch:
+        exclude-patterns:
+          - "@types/*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: build(docker)
+    # The Dockerfile pins the floating `node:24-alpine` tag, so patch and minor
+    # Node releases are already picked up at build time with no PR. In practice
+    # this only fires for a major (25-alpine), which is a deliberate call —
+    # worth surfacing rather than ignoring.
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - "*"
