@@ -37,3 +37,33 @@ Run `gh issue list` for the current state.
 - **API key:** `/v1` routes require `x-api-key` only when `API_KEY` is set at
   launch; root `/` and `/api-docs` stay open. If `API_KEY` is unset the API is open.
 - Default branch is `main`. Work on a branch and open a PR (CI gates merges).
+  Version-bump commits are the exception — those go straight to `main`, with a
+  bare `2.x.x` commit message.
+
+## Dependencies & Dependabot
+
+- **Config:** `.github/dependabot.yml`, weekly on Monday, covering all three
+  ecosystems present — npm, docker (the `Dockerfile` base image), and
+  github-actions. `@types/*` and other minor/patch npm bumps are **grouped**
+  into single PRs; majors stay individual so each gets its own review. Security
+  updates are independent of this file and arrive regardless.
+- **Transitive CVEs are pinned via `overrides`,** not by adding direct
+  dependencies — see the `overrides` block in `package.json` (`js-yaml`, `qs`,
+  `brace-expansion`, plus a **nested** `copyfiles → minimatch →
+  brace-expansion` entry, which is needed because copyfiles pins an old
+  minimatch that the root override alone doesn't reach). When a follow-up
+  advisory lands for something already pinned, **bump the existing entry**
+  rather than adding a second one — `brace-expansion` has now been moved twice
+  this way.
+- **Docker base image: stay on LTS Node.** Dependabot will propose odd-numbered
+  current releases (Node 25 was declined in #60); take a major only when the
+  next LTS ships. The `Dockerfile` pins the floating `24-alpine` tag, so
+  patch/minor Node updates already arrive at build time with no PR.
+- **Closing a Dependabot PR** stops it re-proposing *that* version but not
+  future ones — it opens a fresh PR when a newer version appears. That's why
+  #60 was closed without an `ignore` rule: Node 26 LTS should still get a PR.
+- **Untyped JS dependencies fail the build under TypeScript 7** with `TS7016`
+  (5.x silently inferred `any`). `@mitchallen/uptime` was vendored to
+  `src/uptime.ts` for exactly this reason — don't re-add it. For a tiny untyped
+  dep, prefer vendoring it or shipping real types over an ambient
+  `declare module`, which suppresses the error without typing anything.
