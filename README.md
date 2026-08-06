@@ -357,3 +357,13 @@ Tags matching `v*` trigger two workflows that build and push multi-platform (`li
 
 Each publish creates both a versioned tag and updates `latest`.
 
+* * *
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+The license covers this project's own code. It does not apply to any third
+party assets that were imported into the project as a utility or for
+demonstration purposes; contact the authors of those assets for their
+licensing information.
