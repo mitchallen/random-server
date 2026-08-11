@@ -71,13 +71,26 @@ Run `gh issue list` for the current state.
   the problem: `swagger-jsdoc → glob: ^13.0.6` exists solely to silence a
   deprecation warning, and is safe because glob v13 still exports the `.sync`
   swagger-jsdoc calls and the `apis` entries are literal paths, not patterns.
-- **Docker base image: stay on LTS Node.** Dependabot will propose odd-numbered
-  current releases (Node 25 was declined in #60); take a major only when the
-  next LTS ships. The `Dockerfile` pins the floating `24-alpine` tag, so
-  patch/minor Node updates already arrive at build time with no PR.
+- **Docker base image: stay on LTS Node.** Take a major only once it has
+  actually *entered* LTS — not when it's merely released. Dependabot proposes
+  both odd-numbered current releases (Node 25, declined in #60) and even majors
+  that are still in their pre-LTS "Current" phase (Node 26 released 2026-05-05
+  but isn't LTS until **2026-10-28**). The `Dockerfile` pins the floating
+  `24-alpine` tag, so patch/minor Node updates already arrive at build time with
+  no PR. Check the real dates against
+  <https://github.com/nodejs/Release/blob/main/schedule.json> rather than
+  assuming an even major is LTS.
+- **PR #71 (`24-alpine` → `26-alpine`) is intentionally parked**, not stalled.
+  Leave it open and unmerged until 2026-10-28, then re-check CI and merge. Its
+  `test` and `docker` checks already pass, so the image does build on 26 — the
+  hold is purely about the LTS date. Node 24 is in active LTS until 2026-10-20
+  and supported through 2028-04-30, so there's no urgency.
 - **Closing a Dependabot PR** stops it re-proposing *that* version but not
   future ones — it opens a fresh PR when a newer version appears. That's why
-  #60 was closed without an `ignore` rule: Node 26 LTS should still get a PR.
+  #60 was closed without an `ignore` rule, and it worked: Node 26 duly got its
+  own PR (#71). Parking a PR open, as with #71, is the alternative when the
+  version is one you *do* eventually want — it keeps the reminder visible
+  instead of waiting on Dependabot to re-propose.
 - **Keep install output warning-free.** A cold `npm ci` currently emits **zero**
   `npm warn deprecated` lines; keep it that way. Warnings that always appear and
   never matter train you to skip the output, so a real one gets missed. Fix the
