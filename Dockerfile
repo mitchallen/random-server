@@ -1,5 +1,5 @@
 # --- Stage 1: Build ---
-FROM node:24-alpine AS builder
+FROM node:26-alpine AS builder
 WORKDIR /app
 
 # Copy package files first for better caching
@@ -11,7 +11,7 @@ COPY . .
 RUN npm run clean && npm run build
 
 # --- Stage 2: Production ---
-FROM node:24-alpine AS prod
+FROM node:26-alpine AS prod
 WORKDIR /app
 
 # Upgrade OS packages to fix vulnerabilities (e.g. zlib)
