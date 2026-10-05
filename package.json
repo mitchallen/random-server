@@ -39,7 +39,7 @@
   "overrides": {
     "js-yaml": "^4.3.0",
     "qs": ">=6.15.2",
-    "brace-expansion": ">=5.0.9",
+    "brace-expansion": ">=5.0.12",
     "swagger-jsdoc": {
       "glob": "^13.0.6"
     }
