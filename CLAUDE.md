@@ -98,6 +98,14 @@ Run `gh issue list` for the current state.
   never matter train you to skip the output, so a real one gets missed. Fix the
   cause — drop or replace the offending package, or scope an override — rather
   than hiding it behind `--silent` or a redirect.
+- **Install scripts are an explicit allow/deny list** (`allowScripts` in
+  `package.json`, npm 11). npm already skips unlisted scripts but warns about
+  each one; listing it silences the warning. `@scarf/scarf` (download
+  telemetry pulled in by `swagger-ui-dist`) is denied — nothing here needs it.
+  Add a new package with `npm install-scripts approve|deny <pkg>`, approving
+  only when it genuinely needs to build something. A user-level
+  `allow-scripts=` line in `~/.npmrc` is ignored here and npm says so; that
+  warning is local to the machine, not something to fix in this repo.
 - **Untyped JS dependencies fail the build under TypeScript 7** with `TS7016`
   (5.x silently inferred `any`). `@mitchallen/uptime` was vendored to
   `src/uptime.ts` for exactly this reason — don't re-add it. For a tiny untyped
