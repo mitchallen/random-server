@@ -1,9 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { Request as ExpressRequest } from 'express';
-import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import { toHHMMSS } from './uptime';
+import { buildOpenApiSpec } from './openapi';
 import emptyRouter from './controllers/random-empty-router';
 import randomWordRouter from './controllers/random-word-router';
 import randomValueRouter from './controllers/random-value-router';
@@ -60,31 +60,12 @@ let customSwaggerOptions = {
     customSiteTitle: API_TITLE,
 };
 
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        servers: [
-            {
-                "url": BASE_PATH,     // e.g. "/api/service1"
-                "description": "Mounted base path"
-            }
-        ],
-        info: {
-            title: API_TITLE,
-            version: APP_VERSION,
-            author: AUTHOR,
-            description: API_TAG_LINE,
-        },
-    },
-    apis: [
-        './dist/root.yaml',
-        './dist/controllers/random-coord.yaml',
-        './dist/controllers/random-person.yaml',
-        // put future controller yaml here
-    ],
-};
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
+const swaggerDocs = buildOpenApiSpec({
+    basePath: BASE_PATH,
+    title: API_TITLE,
+    version: APP_VERSION,
+    description: API_TAG_LINE,
+});
 
 //////
 
