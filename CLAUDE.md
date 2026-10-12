@@ -15,10 +15,14 @@ Run `gh issue list` for the current state.
 ## Conventions
 
 - **TypeScript build:** source in `src/`, compiled to `dist/` via `npm run build`
-  (`tsc`, then `scripts/copy-yaml.mjs` to mirror the `*.yaml` swagger files into
-  `dist/`). `start` runs `node dist/index.js`. The copy step is a plain
-  `fs.cpSync` with no dependencies — it replaced `copyfiles`, which was
-  unmaintained and dragged in `glob@7` + `inflight`.
+  (plain `tsc`). `start` runs `node dist/index.js`.
+- **OpenAPI spec:** `src/openapi.ts` builds the `/api-docs` spec as a typed
+  `OpenAPIV3.Document` (types from the dev-only `openapi-types`). Document new
+  routes there — `collectionPaths()` covers the list/count/by-id trio. Don't
+  bring back YAML spec files or `swagger-jsdoc`: it pulled 27 packages into
+  production (`ajv`, `fast-uri`, `js-yaml`, `glob`/`minimatch`/
+  `brace-expansion`, a pre-release `yaml`) and caused most of this repo's
+  Dependabot alerts, all to merge three static YAML files.
 - **Tests:** `npm test` (Cucumber, `features/`). The suite **spawns the compiled
   server** (`node dist/index.js`) in `BeforeAll`, so `npm run build` must run
   first. The test server launches with `API_KEY=demo-key`. CI
@@ -63,14 +67,13 @@ Run `gh issue list` for the current state.
   gating them. `enforce_admins` is off, so direct version-bump pushes to `main`
   still work.
 - **Transitive CVEs are pinned via `overrides`,** not by adding direct
-  dependencies — see the `overrides` block in `package.json` (`js-yaml`, `qs`,
-  `brace-expansion`). When a follow-up advisory lands for something already
-  pinned, **bump the existing entry** rather than adding a second one —
-  `brace-expansion` has been moved twice this way (`5.0.6 → 5.0.7 → 5.0.9`).
+  dependencies — see the `overrides` block in `package.json` (currently just
+  `qs`, under Express). When a follow-up advisory lands for something already
+  pinned, **bump the existing entry** rather than adding a second one.
   Overrides can also be **scoped to one dependent** when only that package is
-  the problem: `swagger-jsdoc → glob: ^13.0.6` exists solely to silence a
-  deprecation warning, and is safe because glob v13 still exports the `.sync`
-  swagger-jsdoc calls and the `apis` entries are literal paths, not patterns.
+  the problem (`"parent": { "child": "^x" }`). Before adding an override,
+  check whether the dependent is worth keeping at all — removing
+  `swagger-jsdoc` retired three overrides at once.
 - **Docker base image: stay on LTS Node.** Take a major only once it has
   actually *entered* LTS — not when it's merely released. Dependabot proposes
   both odd-numbered current releases (Node 25, declined in #60) and even majors

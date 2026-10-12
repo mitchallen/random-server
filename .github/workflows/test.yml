@@ -57,13 +57,12 @@ jobs:
           curl -sf http://localhost:3100/ | grep -q '"status":"OK"'
           curl -sf http://localhost:3100/v1/people/1 | grep -q '"type":"people"'
 
-          # The swagger yaml files are copied into dist/ by a build script, so
-          # assert on strings that can ONLY come from those files — grepping for
-          # "openapi" would pass even with every yaml missing, since the base
-          # definition is inlined in src/index.ts.
+          # Assert on strings from the route docs in src/openapi.ts, not just
+          # "openapi", so the check fails if the paths/schemas go missing.
           curl -sf http://localhost:3100/api-docs/swagger-ui-init.js > spec.js
-          grep -q 'Get the service status' spec.js  # from dist/root.yaml
-          grep -q 'ssnFour' spec.js                 # from dist/controllers/random-person.yaml
+          grep -q 'Get the service status' spec.js
+          grep -q 'ssnFour' spec.js
+          grep -q '#/components/schemas/Person' spec.js
           echo "container smoke test passed"
 
       - name: Container logs
