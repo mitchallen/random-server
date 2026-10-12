@@ -76,20 +76,19 @@ Run `gh issue list` for the current state.
   both odd-numbered current releases (Node 25, declined in #60) and even majors
   that are still in their pre-LTS "Current" phase (Node 26 released 2026-05-05
   but isn't LTS until **2026-10-28**). The `Dockerfile` pins the floating
-  `24-alpine` tag, so patch/minor Node updates already arrive at build time with
+  `26-alpine` tag, so patch/minor Node updates already arrive at build time with
   no PR. Check the real dates against
   <https://github.com/nodejs/Release/blob/main/schedule.json> rather than
   assuming an even major is LTS.
-- **PR #71 (`24-alpine` → `26-alpine`) is intentionally parked**, not stalled.
-  Leave it open and unmerged until 2026-10-28, then re-check CI and merge. Its
-  `test` and `docker` checks already pass, so the image does build on 26 — the
-  hold is purely about the LTS date. Node 24 is in active LTS until 2026-10-20
-  and supported through 2028-04-30, so there's no urgency.
+- **PR #71 (`24-alpine` → `26-alpine`) was merged on 2026-08-24**, ahead of
+  the planned hold until Node 26 entered LTS on 2026-10-28. Its `test` and
+  `docker` checks passed, so the image builds on 26. The base image is
+  now `node:26-alpine` in both `Dockerfile` stages.
 - **Closing a Dependabot PR** stops it re-proposing *that* version but not
   future ones — it opens a fresh PR when a newer version appears. That's why
   #60 was closed without an `ignore` rule, and it worked: Node 26 duly got its
-  own PR (#71). Parking a PR open, as with #71, is the alternative when the
-  version is one you *do* eventually want — it keeps the reminder visible
+  own PR (#71). Parking a PR open, as was planned for #71, is the alternative
+  when the version is one you *do* eventually want — it keeps the reminder visible
   instead of waiting on Dependabot to re-propose.
 - **Keep install output warning-free.** A cold `npm ci` currently emits **zero**
   `npm warn deprecated` lines; keep it that way. Warnings that always appear and
