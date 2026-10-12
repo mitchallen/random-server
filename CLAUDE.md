@@ -3,7 +3,7 @@
 A REST API server that returns random JSON data (people, words, values, coords,
 and an always-empty route). TypeScript 7 + Express 5, Cucumber 13 tests, Swagger
 UI at `/api-docs`, optional `API_KEY` auth, graceful shutdown, multi-stage Docker
-on Node 24, published to GHCR + Docker Hub via tag-triggered workflows.
+on Node 26, published to GHCR + Docker Hub via tag-triggered workflows.
 
 ## Remaining work (open GitHub issues)
 
@@ -29,11 +29,19 @@ Run `gh issue list` for the current state.
   (`.github/workflows/test.yml`) runs build + test on push/PR to `main`.
 - **Release:** bump the version and push a `v*` tag → the publish workflows build
   and push multi-platform images to GHCR + Docker Hub and sync the README to
-  Docker Hub. See the README "Publish" section.
-- **PR CI never builds the Docker image** — only the tag-triggered publish
-  workflows do. A broken `Dockerfile` or build script therefore stays invisible
-  until release. Run `docker build .` locally before tagging whenever the build
-  pipeline, `Dockerfile`, or anything `npm run build` touches has changed.
+  Docker Hub. See the README "Publish" section. Use a **minor** bump when the
+  runtime or a framework moves a major (2.2.0 = Express 5; 2.3.0 = Node 26 base
+  image + `swagger-jsdoc` removal), patch otherwise. GHCR and Docker Hub
+  images have different digests because two workflows build them separately;
+  that's expected.
+- **PR CI builds and smoke-tests the image** (the `docker` job in
+  `.github/workflows/test.yml`), but only for the runner's platform — the
+  `linux/arm64` half of the multi-platform build only runs at release. The
+  `test` job's `node-version` must match the `Dockerfile` base image major
+  (both 26) — bump them together, or the Cucumber suite tests a different Node
+  than production runs. Still run
+  `docker build .` locally before tagging when the `Dockerfile` or build
+  pipeline changed.
 - **Routing (Express 5 / path-to-regexp v8):** bare `*` wildcards are gone — a
   route like `app.get('*', ...)` throws `PathError: Missing parameter name` at
   **boot**, not at request time, so it takes the whole server down. Use the named
@@ -106,8 +114,51 @@ Run `gh issue list` for the current state.
   only when it genuinely needs to build something. A user-level
   `allow-scripts=` line in `~/.npmrc` is ignored here and npm says so; that
   warning is local to the machine, not something to fix in this repo.
+- **Find where alerts come from before patching them one by one.** Tally the
+  alert history by package (`gh api --paginate
+  'repos/mitchallen/random-server/dependabot/alerts?per_page=100'`) and trace
+  each package to its top-level dependent with `npm explain <pkg>`. That's how
+  `swagger-jsdoc` turned out to be behind ~30 of ~54 alerts in a year — a
+  dependency to remove, not a stream of overrides to keep bumping.
+- **Dev dependencies raise Dependabot alerts too.** Moving a package to
+  `devDependencies` keeps it out of the image but not out of the alert feed;
+  only removing it does that.
+- **`npm audit` can be ahead of GitHub's alerts.** On 2026-10-12 sibling
+  `mockport-server` had a critical `proxy-addr` advisory in `npm audit` with no
+  Dependabot alert or PR yet. Run `npm audit` when reviewing, rather than
+  treating zero open alerts as zero vulnerabilities.
+- **Adding or editing `dependabot.yml` triggers a run immediately**, not at the
+  next Monday. Bring dependencies and actions current *before* landing a new
+  config, or expect a batch of catch-up PRs within minutes.
+- **Read the `package.json` diff of automated security-fix PRs.** In sibling
+  `mcp-hello-typescript-server`, a "Dependabot resolver" PR (#51) promoted five
+  transitive packages to direct `dependencies` (one, `fast-uri@^4`, never even
+  reached the nested copy it targeted) and slipped in a `zod` 3 → 4 major.
+  Lockfile-only changes are the expected shape; new direct deps are a red flag.
+- **Floating `lts-alpine` tag as an alternative to pinning.** The archived demo
+  repos switched to `node:lts-alpine`, which follows the LTS policy above
+  automatically and never triggers a Dependabot docker PR (no version number to
+  bump). The trade-off is less reproducible builds and no PR to review when the
+  major moves. Once Node 26 is LTS (2026-10-28) this repo could do the same; for
+  now it pins `26-alpine`.
 - **Untyped JS dependencies fail the build under TypeScript 7** with `TS7016`
   (5.x silently inferred `any`). `@mitchallen/uptime` was vendored to
   `src/uptime.ts` for exactly this reason — don't re-add it. For a tiny untyped
   dep, prefer vendoring it or shipping real types over an ambient
   `declare module`, which suppresses the error without typing anything.
+
+## Sibling projects (`../`)
+
+random-server was the template for several sibling servers. As of 2026-10-12:
+
+- **Archived** (read-only on GitHub; don't revive the pattern): `csv-server`,
+  `image-server`, `markdown-server`, `video-server` were copies of the *old*
+  random-server template (swagger-jsdoc, axios, body-parser, mocha/istanbul,
+  Express 4, Node 23) with ~90 open alerts each and no tests or CI. The small
+  demos `docker-build-args`, `docker-no-latest`, `docker-nginx` and
+  `docker-go-wicked-small` were modernised and then archived.
+- **Active**, each with CI + Dependabot: `thing-server` (same stack, already on
+  a typed `src/openapi` spec), `mockport-server`, and `mcp-hello-go-server`,
+  `mcp-hello-rust-server`, `mcp-hello-server`, `mcp-hello-typescript-server`,
+  `random-mcp-server`. A fix made here (e.g. the `@scarf/scarf` deny) often
+  applies to `thing-server` too.
