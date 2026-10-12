@@ -37,8 +37,9 @@ Run `gh issue list` for the current state.
 - **PR CI builds and smoke-tests the image** (the `docker` job in
   `.github/workflows/test.yml`), but only for the runner's platform — the
   `linux/arm64` half of the multi-platform build only runs at release. The
-  `test` job runs on Node 24 while the image is Node 26, so the container smoke
-  test is the only CI coverage of the production Node version. Still run
+  `test` job's `node-version` must match the `Dockerfile` base image major
+  (both 26) — bump them together, or the Cucumber suite tests a different Node
+  than production runs. Still run
   `docker build .` locally before tagging when the `Dockerfile` or build
   pipeline changed.
 - **Routing (Express 5 / path-to-regexp v8):** bare `*` wildcards are gone — a
