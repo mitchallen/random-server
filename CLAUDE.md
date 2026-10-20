@@ -34,6 +34,17 @@ Run `gh issue list` for the current state.
   image + `swagger-jsdoc` removal), patch otherwise. GHCR and Docker Hub
   images have different digests because two workflows build them separately;
   that's expected.
+- **Deciding whether a release is due:** compare `main` against the latest tag
+  and ignore `.github/` and `*.md` — CI and docs changes don't reach the image.
+  A lockfile change only counts if it moves the *production* tree; compare the
+  non-dev entries (`jq '.packages|to_entries[]|select(.value.dev!=true)'` on
+  `package-lock.json` at the tag vs now). Dependabot auto-merges land on `main`
+  without a release, so a production bump (e.g. `express` 5.3.0 in #85) sits
+  unshipped until someone tags it.
+- **Auto-merged PRs don't trigger a `push` CI run on `main`.** Merges made with
+  the workflow's `GITHUB_TOKEN` don't start other workflows, so the merge commit
+  shows no `test`/`docker` run. The PR's own required checks are the gate; the
+  next push you make (e.g. the version bump) runs CI on `main` again.
 - **PR CI builds and smoke-tests the image** (the `docker` job in
   `.github/workflows/test.yml`), but only for the runner's platform — the
   `linux/arm64` half of the multi-platform build only runs at release. The
@@ -149,7 +160,7 @@ Run `gh issue list` for the current state.
 
 ## Sibling projects (`../`)
 
-random-server was the template for several sibling servers. As of 2026-10-12:
+random-server was the template for several sibling servers. As of 2026-10-20:
 
 - **Archived** (read-only on GitHub; don't revive the pattern): `csv-server`,
   `image-server`, `markdown-server`, `video-server` were copies of the *old*
@@ -162,3 +173,37 @@ random-server was the template for several sibling servers. As of 2026-10-12:
   `mcp-hello-rust-server`, `mcp-hello-server`, `mcp-hello-typescript-server`,
   `random-mcp-server`. A fix made here (e.g. the `@scarf/scarf` deny) often
   applies to `thing-server` too.
+- **Shared baseline (all eight active repos, as of 2026-10-20):** branch
+  protection on `main` with required checks, the repo's *Allow auto-merge*
+  setting on, a `dependabot-auto-merge.yml` (actions: all; everything else:
+  minor + patch), and a **required check that starts the built container**
+  and probes it. The REST servers do that in a `docker` job (random-server,
+  thing-server, mockport-server's `make smoke`); the MCP servers do it inside
+  the required `scan` job, running `make docker-smoke` (an MCP `initialize`)
+  against the image it just built. mockport-server deliberately leaves its
+  `audit` job *not* required, so one unrelated advisory can't block every PR.
+  Before adding any of these to a sibling, check it isn't already there — the
+  mcp-hello repos had all of it except the container start.
+- **Siblings drift on dependency bumps.** Schedules differ (thing-server and
+  mockport-server update monthly; random-server and the MCP servers weekly),
+  so a bump that lands here can take weeks to reach a sibling.
+  When releasing here for a production dep, run `npm outdated` in
+  `thing-server` too — express 5.3.0 shipped here as 2.3.2 and was hand-bumped
+  there (thing-server #102 → 1.0.32) the same day.
+- **Release and merge conventions differ per repo — follow each one's own
+  CLAUDE.md:**
+  - random-server, thing-server: `npm version X.Y.Z` → push `main` and the
+    `vX.Y.Z` tag. random-server merges PRs with `--merge`; the others squash.
+  - mcp-hello-rust-server, mcp-hello-typescript-server, random-mcp-server:
+    add the `## [X.Y.Z]` section to `CHANGELOG.md` (and its compare link),
+    commit `docs: changelog for vX.Y.Z` to `main`, then `make release` — it
+    refuses to run without that section, and creates the GitHub Release
+    itself.
+  - mockport-server, mcp-hello-go-server and mcp-hello-server release through
+    a PR (`Release vX.Y.Z (#N)`). go and mcp-hello-server have
+    `enforce_admins` **on**, so nothing can be pushed straight to their `main`.
+- **Publish runs are slow for compiled/multi-arch images — don't mistake that
+  for a hang.** Typical tag-to-done: random-server/thing-server and
+  mcp-hello-typescript-server ~1.5 min; random-mcp-server 14–20 min;
+  mcp-hello-rust-server 19–27 min (the `linux/arm64` half under QEMU). Compare
+  against `gh run list --workflow publish.yml` before investigating.
