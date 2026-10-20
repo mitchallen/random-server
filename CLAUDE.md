@@ -188,8 +188,11 @@ random-server was the template for several sibling servers. As of 2026-10-20:
   mockport-server update monthly; random-server and the MCP servers weekly),
   so a bump that lands here can take weeks to reach a sibling.
   When releasing here for a production dep, run `npm outdated` in
-  `thing-server` too — express 5.3.0 shipped here as 2.3.2 and was hand-bumped
-  there (thing-server #102 → 1.0.32) the same day.
+  `thing-server` **and** `mockport-server` too — express 5.3.0 shipped here as
+  2.3.2 and was hand-bumped in both the same day (thing-server #102 → 1.0.32,
+  mockport-server #38 → 0.1.9). While in a sibling, run `npm explain <pkg>`
+  on each `overrides` entry: mockport-server's `diff` and
+  `serialize-javascript` pins had been dead since its mocha removal.
 - **Release and merge conventions differ per repo — follow each one's own
   CLAUDE.md:**
   - random-server, thing-server: `npm version X.Y.Z` → push `main` and the
@@ -203,7 +206,13 @@ random-server was the template for several sibling servers. As of 2026-10-20:
     a PR (`Release vX.Y.Z (#N)`). go and mcp-hello-server have
     `enforce_admins` **on**, so nothing can be pushed straight to their `main`.
 - **Publish runs are slow for compiled/multi-arch images — don't mistake that
-  for a hang.** Typical tag-to-done: random-server/thing-server and
-  mcp-hello-typescript-server ~1.5 min; random-mcp-server 14–20 min;
-  mcp-hello-rust-server 19–27 min (the `linux/arm64` half under QEMU). Compare
-  against `gh run list --workflow publish.yml` before investigating.
+  for a hang.** Typical tag-to-done: random-server, thing-server,
+  mockport-server and mcp-hello-typescript-server ~1.5 min; random-mcp-server
+  14–20 min; mcp-hello-rust-server 19–27 min (the `linux/arm64` half under
+  QEMU). Compare against `gh run list --workflow publish.yml` before
+  investigating.
+- **After publishing, check what shipped, not just the green run:**
+  `docker buildx imagetools inspect <image>:X.Y.Z` on both registries for
+  `linux/amd64` + `linux/arm64`, and for a dependency release, run the image
+  to read the version it carries, e.g.
+  `docker run --rm --entrypoint node <image>:X.Y.Z -p "require('express/package.json').version"`.
