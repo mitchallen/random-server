@@ -19,7 +19,7 @@ jobs:
       - name: Trivy scan of published :latest (SARIF)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ghcr.io/mitchallen/random-serveratest
+          image-ref: ghcr.io/mitchallen/random-server:latest
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH,MEDIUM
