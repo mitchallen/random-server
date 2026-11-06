@@ -130,3 +130,61 @@ Then('the {string} property of each item should be a numeric value', function (p
         assert(typeof item[prop] === 'number', `${prop} property is not a number`);
     });
 });
+
+When('the OpenAPI spec is requested without an API key', async function () {
+    const res = await fetch(`${this.world.serviceUrl}/openapi.json`);
+    this.response = { status: res.status, data: await res.json() };
+    this.world.root.spec = this.response.data;
+});
+
+Then("the spec server URL should be this server's address", function () {
+    assert.strictEqual(this.world.root.spec.servers[0].url, this.world.serviceUrl);
+});
+
+const operationsOf = (spec) => Object.entries(spec.paths).flatMap(([path, item]) =>
+    Object.entries(item).map(([method, operation]) => ({ path, method, operation })));
+
+Then('every operation should have a unique operationId', function () {
+    const ops = operationsOf(this.world.root.spec);
+    const ids = ops.map(({ operation }) => operation.operationId);
+    assert.ok(ids.every(Boolean), 'an operation has no operationId');
+    assert.strictEqual(new Set(ids).size, ids.length, 'operationIds are not unique');
+});
+
+Then('every \\/v1 operation should require the apiKey security scheme', function () {
+    const { spec } = this.world.root;
+    assert.strictEqual(spec.components.securitySchemes.apiKey.name, 'x-api-key');
+    for (const { path, operation } of operationsOf(spec)) {
+        if (path.startsWith('/v1/')) {
+            assert.deepStrictEqual(operation.security, [{ apiKey: [] }], path);
+        }
+    }
+});
+
+Then('no operation should take the API key as a parameter', function () {
+    for (const { path, operation } of operationsOf(this.world.root.spec)) {
+        const names = (operation.parameters || []).map((p) => p.name);
+        assert.ok(!names.includes('x-api-key'), path);
+    }
+});
+
+Then('the root operation should not require a security scheme', function () {
+    assert.strictEqual(this.world.root.spec.paths['/'].get.security, undefined);
+});
+
+Then('the spec should document the {string} collection', function (name) {
+    for (const path of [`/v1/${name}`, `/v1/${name}/count`, `/v1/${name}/{objectId}`]) {
+        assert.ok(this.world.root.spec.paths[path], `${path} is not documented`);
+    }
+});
+
+Then('every documented path without a parameter should answer 200', async function () {
+    for (const path of Object.keys(this.world.root.spec.paths)) {
+        if (!path.includes('{')) {
+            const res = await fetch(`${this.world.serviceUrl}${path}`, {
+                headers: this.world.headers,
+            });
+            assert.strictEqual(res.status, 200, path);
+        }
+    }
+});

@@ -12,20 +12,23 @@ export interface OpenApiInfo {
     description: string;
 }
 
-const apiKeyHeader: OpenAPIV3.ParameterObject = {
+// A security scheme rather than a header parameter: tool generators turn a
+// parameter into a tool input, which would show the key to the caller's model.
+const apiKeyScheme: OpenAPIV3.ApiKeySecurityScheme = {
+    type: 'apiKey',
     in: 'header',
     name: 'x-api-key',
-    schema: { type: 'string', default: 'demo-key' },
-    required: true,
-    description: 'customer api key',
+    description: 'Required only when the server is started with API_KEY set',
 };
+
+const requiresApiKey: OpenAPIV3.SecurityRequirementObject[] = [{ apiKey: [] }];
 
 const objectIdParam: OpenAPIV3.ParameterObject = {
     in: 'path',
     name: 'objectId',
-    schema: { type: 'string' },
+    schema: { type: 'integer', minimum: 1 },
     required: true,
-    description: 'Unique objectId',
+    description: 'Position in the collection, starting at 1',
 };
 
 const errorResponses: OpenAPIV3.ResponsesObject = {
@@ -54,11 +57,13 @@ const collectionPaths = (
     tag: string,
     schemaName: string,
     noun: { one: string; many: string; its: string },
+    ids: { list: string; count: string; get: string },
     example: object,
 ): OpenAPIV3.PathsObject => ({
     [`/v1/${route}`]: {
-        parameters: [apiKeyHeader],
         get: {
+            operationId: ids.list,
+            security: requiresApiKey,
             summary: `Get an array of ${noun.many}`,
             tags: [tag],
             responses: {
@@ -71,8 +76,9 @@ const collectionPaths = (
         },
     },
     [`/v1/${route}/count`]: {
-        parameters: [apiKeyHeader],
         get: {
+            operationId: ids.count,
+            security: requiresApiKey,
             summary: `Get the count of ${noun.many}`,
             tags: [tag],
             responses: {
@@ -88,8 +94,9 @@ const collectionPaths = (
         },
     },
     [`/v1/${route}/{objectId}`]: {
-        parameters: [apiKeyHeader],
         get: {
+            operationId: ids.get,
+            security: requiresApiKey,
             summary: `Get a ${noun.one} by ${noun.its} objectId`,
             parameters: [objectIdParam],
             tags: [tag],
@@ -110,6 +117,10 @@ const coordExample = {
     longitude: -49.948253,
 };
 
+const wordExample = { type: 'words', value: 'zemic' };
+
+const valueExample = { type: 'values', name: 'dafe', value: -415365907192.2176 };
+
 const personExample = {
     type: 'people',
     prefix: 'Dr.',
@@ -125,6 +136,29 @@ const personExample = {
 };
 
 const schemas: Record<string, OpenAPIV3.SchemaObject> = {
+    Word: {
+        type: 'object',
+        required: ['type', 'value'],
+        properties: {
+            type: { type: 'string', description: 'The type defaults to words' },
+            value: { type: 'string', description: 'A random word' },
+        },
+        example: wordExample,
+    },
+    Value: {
+        type: 'object',
+        required: ['type', 'name', 'value'],
+        properties: {
+            type: { type: 'string', description: 'The type defaults to values' },
+            name: { type: 'string', description: 'A random name' },
+            value: { type: 'number', description: 'A random number' },
+        },
+        example: valueExample,
+    },
+    Empty: {
+        type: 'object',
+        description: 'The empty collection has no records, so this is never returned',
+    },
     Coord: {
         type: 'object',
         required: ['type', 'latitude', 'longitude'],
@@ -174,6 +208,7 @@ export const buildOpenApiSpec = (info: OpenApiInfo): OpenAPIV3.Document => ({
     paths: {
         '/': {
             get: {
+                operationId: 'getStatus',
                 summary: 'Get the service status',
                 tags: ['service health'],
                 responses: {
@@ -193,9 +228,20 @@ export const buildOpenApiSpec = (info: OpenApiInfo): OpenAPIV3.Document => ({
             },
         },
         ...collectionPaths('coords', 'coords', 'Coord',
-            { one: 'coord', many: 'coords', its: 'its' }, coordExample),
+            { one: 'coord', many: 'coords', its: 'its' },
+            { list: 'listCoords', count: 'countCoords', get: 'getCoord' }, coordExample),
         ...collectionPaths('people', 'people', 'Person',
-            { one: 'person', many: 'people', its: 'their' }, personExample),
+            { one: 'person', many: 'people', its: 'their' },
+            { list: 'listPeople', count: 'countPeople', get: 'getPerson' }, personExample),
+        ...collectionPaths('words', 'words', 'Word',
+            { one: 'word', many: 'words', its: 'its' },
+            { list: 'listWords', count: 'countWords', get: 'getWord' }, wordExample),
+        ...collectionPaths('values', 'values', 'Value',
+            { one: 'value', many: 'values', its: 'its' },
+            { list: 'listValues', count: 'countValues', get: 'getValue' }, valueExample),
+        ...collectionPaths('empty', 'empty', 'Empty',
+            { one: 'record', many: 'records in the always-empty collection', its: 'its' },
+            { list: 'listEmpty', count: 'countEmpty', get: 'getEmpty' }, {}),
     },
-    components: { schemas },
+    components: { schemas, securitySchemes: { apiKey: apiKeyScheme } },
 });
