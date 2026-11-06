@@ -51,6 +51,7 @@ const apiKeyGuard = (req: Request, res: Response, next: NextFunction) => {
 
 // swagger 
 const EXPLORER_PATH = joinUrlPath(BASE_PATH, '/api-docs');
+const OPENAPI_PATH = joinUrlPath(BASE_PATH, '/openapi.json');
 const AUTHOR = "Mitch Allen"
 const API_TITLE = "random-server"
 const API_TAG_LINE = "Random JSON Server API"
@@ -101,6 +102,22 @@ app.use(express.json({
     }
 }));
 
+// The spec as JSON, for tools that generate clients from it. Open like the
+// explorer, which already publishes the same document. Its server URL is
+// absolute because a generator has no page to resolve a relative one against,
+// and UTCP's converter would otherwise write tool URLs that can never be called.
+app.get(OPENAPI_PATH, (req: Request, res: Response) => {
+    const proto = req.get('x-forwarded-proto')?.split(',')[0].trim() || req.protocol;
+    const host = req.get('x-forwarded-host') || req.get('host');
+    res.json({
+        ...swaggerDocs,
+        servers: [{
+            url: `${proto}://${host}${BASE_PATH.replace(/\/$/, '')}`,
+            description: 'This server, as seen by the request',
+        }],
+    });
+});
+
 // Setup swagger
 
 app.use(
@@ -145,6 +162,7 @@ app.get(BASE_PATH, (req: Request, res: Response) => {
         version: APP_VERSION,
         uptime: toHHMMSS(),
         explorer: EXPLORER_PATH,
+        openapi: OPENAPI_PATH,
         route: BASE_PATH,
     });
 });

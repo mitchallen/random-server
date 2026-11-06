@@ -153,6 +153,14 @@ Once the container is running, the interactive API explorer is available at:
 http://localhost:1220/api-docs
 ```
 
+The same OpenAPI 3 spec is served as JSON, without an API key, for tools that generate clients or tool definitions from it:
+
+```
+http://localhost:1220/openapi.json
+```
+
+Every operation has an `operationId`, and the `/v1` routes declare `x-api-key` as an `apiKey` security scheme. Its `servers` entry is the absolute address the request came in on, honoring `X-Forwarded-Proto` and `X-Forwarded-Host` behind a proxy. In the explorer, enter the key with **Authorize**.
+
 * * *
 
 ### Test with curl commands

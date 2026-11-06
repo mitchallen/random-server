@@ -23,6 +23,11 @@ Run `gh issue list` for the current state.
   production (`ajv`, `fast-uri`, `js-yaml`, `glob`/`minimatch`/
   `brace-expansion`, a pre-release `yaml`) and caused most of this repo's
   Dependabot alerts, all to merge three static YAML files.
+  It is also served as JSON at `/openapi.json` for tool generators such as UTCP,
+  whose converter silently skips an operation with no `operationId` and turns a
+  header parameter into a tool input. So give every operation a unique
+  `operationId`, and declare the key through the `apiKey` security scheme, never
+  as a parameter. `features/openapi.feature` enforces both.
 - **Tests:** `npm test` (Cucumber, `features/`). The suite **spawns the compiled
   server** (`node dist/index.js`) in `BeforeAll`, so `npm run build` must run
   first. The test server launches with `API_KEY=demo-key`. CI
