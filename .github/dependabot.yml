@@ -5,7 +5,7 @@ version: 2
 # land as reviewable PRs instead of only arriving as security fixes after a
 # CVE. Every PR is gated by .github/workflows/test.yml (build + Cucumber).
 #
-# Noise control: `cooldown` skips releases younger than 7 days, so a burst of
+# Noise control: `cooldown` skips releases younger than 3 days, so a burst of
 # quick patch releases lands as one bump to the latest instead of a PR each.
 # Cooldown does not delay security updates.
 updates:
@@ -15,7 +15,7 @@ updates:
       interval: weekly
       day: monday
     cooldown:
-      default-days: 7
+      default-days: 3
     open-pull-requests-limit: 5
     commit-message:
       prefix: build(deps)
@@ -41,7 +41,7 @@ updates:
       interval: weekly
       day: monday
     cooldown:
-      default-days: 7
+      default-days: 3
     commit-message:
       prefix: build(docker)
     # The Dockerfile pins the floating `node:24-alpine` tag, so patch and minor
@@ -55,7 +55,7 @@ updates:
       interval: weekly
       day: monday
     cooldown:
-      default-days: 7
+      default-days: 3
     commit-message:
       prefix: ci
     groups:
